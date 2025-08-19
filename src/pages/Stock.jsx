@@ -437,6 +437,55 @@ const Stock = () => {
     }, {})
   );
 
+  // ✅ Handle arrow key movement
+  const handleKeyDown = (e) => {
+    if (!selectedCell) return;
+
+    const rows = table.getRowModel().rows;
+    const rowIndex = rows.findIndex((r) => r.id === selectedCell.rowId);
+    const colIndex = rows[0]
+      ?.getVisibleCells()
+      .findIndex((c) => c.column.id === selectedCell.colId);
+
+    if (rowIndex === -1 || colIndex === -1) return;
+
+    let newRow = rowIndex;
+    let newCol = colIndex;
+
+    switch (e.key) {
+      case "ArrowUp":
+        newRow = Math.max(0, rowIndex - 1);
+        break;
+      case "ArrowDown":
+        newRow = Math.min(rows.length - 1, rowIndex + 1);
+        break;
+      case "ArrowLeft":
+        newCol = Math.max(0, colIndex - 1);
+        break;
+      case "ArrowRight":
+        newCol = Math.min(rows[0].getVisibleCells().length - 1, colIndex + 1);
+        break;
+      default:
+        return; // ignore other keys
+    }
+
+    const newRowObj = rows[newRow];
+    const newColObj = newRowObj.getVisibleCells()[newCol];
+
+    setSelectedCell({
+      rowId: newRowObj.id,
+      colId: newColObj.column.id,
+    });
+
+    e.preventDefault(); // stop page scrolling
+  };
+
+  // ✅ Attach keyboard listener
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedCell, table]);
+
   const handleExportExcel = () => {
     const ws = XLSX.utils.json_to_sheet(filteredData);
     const wb = XLSX.utils.book_new();
