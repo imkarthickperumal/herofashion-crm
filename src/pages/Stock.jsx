@@ -87,7 +87,7 @@ const dummyData = generateDummyData(350);
 const Stock = () => {
   const [data, setData] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [columnFilters, setColumnFilters] = useState({});
+  const [columnFilters, setColumnFilters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newRow, setNewRow] = useState({});
@@ -152,9 +152,21 @@ const Stock = () => {
         accessorKey: "OrderNo",
         header: "Order No",
         cell: (info) => info.getValue(),
+        enableColumnFilter: true,
+        filterFn: "text",
       },
-      { accessorKey: "Finalyeardel", header: "Delivery Year" },
-      { accessorKey: "Finaldel", header: "Delivery Date" },
+      {
+        accessorKey: "Finalyeardel",
+        header: "Delivery Year",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "Finaldel",
+        header: "Delivery Date",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
       {
         accessorKey: "MainImagePath",
         header: "Main Image",
@@ -173,17 +185,72 @@ const Stock = () => {
           );
         },
       },
-      { accessorKey: "CompanyID", header: "CompanyID" },
-      { accessorKey: "Year", header: "Year" },
-      { accessorKey: "OrderType", header: "Fabric 8" },
-      { accessorKey: "CustomerID", header: "CustomerID" },
-      { accessorKey: "DepartmentID", header: "Rib18" },
-      { accessorKey: "PONo", header: "PONo" },
-      { accessorKey: "PODate", header: "PODate" },
-      { accessorKey: "Quantity", header: "Quantity" },
-      { accessorKey: "QuantityActual", header: "QuantityActual" },
-      { accessorKey: "QuantityExtra", header: "QuantityExtra" },
-      { accessorKey: "StyleName", header: "StyleName" },
+      {
+        accessorKey: "CompanyID",
+        header: "CompanyID",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "Year",
+        header: "Year",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "OrderType",
+        header: "Fabric 8",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "CustomerID",
+        header: "CustomerID",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "DepartmentID",
+        header: "Rib18",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "PONo",
+        header: "PONo",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "PODate",
+        header: "PODate",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "Quantity",
+        header: "Quantity",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "QuantityActual",
+        header: "QuantityActual",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "QuantityExtra",
+        header: "QuantityExtra",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "StyleName",
+        header: "StyleName",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
       {
         id: "actions",
         header: "Actions",
@@ -209,29 +276,64 @@ const Stock = () => {
 
   // Custom global filter that filters ONLY on OrderNo column
   const globalFilterFn = (row, columnId, filterValue) => {
-    if (columnId !== "OrderNo") return true; // ignore other columns for global filter
+    if (columnId !== "OrderNo") return true;
     const value = row.getValue(columnId);
     return String(value || "")
       .toLowerCase()
       .includes(filterValue.toLowerCase());
   };
 
+  // const globalFilterFn = (row, columnId, filterValue) => {
+  //   const value = row.getValue(columnId);
+  //   return String(value || "")
+  //     .toLowerCase()
+  //     .includes(filterValue.toLowerCase());
+  // };
+
+  // const table = useReactTable({
+  //   data,
+  //   columns,
+  //   state: {
+  //     columnFilters,
+  //     globalFilter,
+  //     pagination: {
+  //       pageSize: data.length,
+  //       pageIndex: 0,
+  //     },
+  //   },
+  //   globalFilterFn,
+  //   onGlobalFilterChange: setGlobalFilter,
+  //   onColumnFiltersChange: setColumnFilters,
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  // });
+
   const table = useReactTable({
     data,
     columns,
     state: {
+      columnFilters,
       globalFilter,
       pagination: {
         pageSize: data.length,
         pageIndex: 0,
       },
     },
-    globalFilterFn,
+    globalFilterFn, // ✅ for global search
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    filterFns: {
+      text: (row, columnId, filterValue) => {
+        const value = row.getValue(columnId);
+        return String(value || "")
+          .toLowerCase()
+          .includes(filterValue.toLowerCase());
+      },
+    },
   });
 
   // Highlight matching text in green
@@ -288,7 +390,7 @@ const Stock = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-1 mt-2 rounded-2xl">
       <div className="max-w-10xl mx-auto">
         <h6 className="text-1xl font-semibold text-gray-800 mb-6 text-start mt-2 ml-2">
-          Stock Management
+          Stock Orders
         </h6>
 
         <div className="bg-white/70 backdrop-blur-md shadow-xl rounded-1xl p-6">
@@ -354,7 +456,36 @@ const Stock = () => {
                         ))}
                       </tr>
                     ))}
+
+                    {/* Filter row */}
+                    <tr>
+                      {table.getHeaderGroups()[0].headers.map((header) => (
+                        <th key={header.id} className="px-2 py-2 border-b">
+                          {header.column.getCanFilter() ? (
+                            <input
+                              type="text"
+                              value={
+                                table
+                                  .getState()
+                                  .columnFilters.find(
+                                    (f) => f.id === header.column.id
+                                  )?.value || ""
+                              }
+                              onChange={(e) =>
+                                header.column.setFilterValue(e.target.value)
+                              } // ✅ string only
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") e.preventDefault(); // stop submit/reload
+                              }}
+                              placeholder={`Search ${header.column.columnDef.header}`}
+                              className="w-full border rounded px-2 py-1 text-xs"
+                            />
+                          ) : null}
+                        </th>
+                      ))}
+                    </tr>
                   </thead>
+
                   <tbody>
                     {table.getRowModel().rows.map((row) => (
                       <tr
