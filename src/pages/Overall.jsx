@@ -350,6 +350,12 @@ const Overall = () => {
           Overall
         </h6>
 
+        {error && (
+          <h6 className="text-center text-red-600 font-bold m-3">
+            API Response {error}
+          </h6>
+        )}
+
         <div className="bg-white/70 backdrop-blur-md shadow-xl rounded-1xl p-1">
           {loading ? (
             <SkeletonTable columnCount={columns.length} rowCount={6} />
