@@ -93,6 +93,7 @@ const Home = () => {
   const [newRow, setNewRow] = useState({});
   const [editRowIndex, setEditRowIndex] = useState(null);
   const [error, setError] = useState(null);
+  const [selectedCell, setSelectedCell] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -275,12 +276,22 @@ const Home = () => {
   );
 
   // Custom global filter that filters ONLY on OrderNo column
-  const globalFilterFn = (row, columnId, filterValue) => {
-    if (columnId !== "OrderNo") return true;
-    const value = row.getValue(columnId);
-    return String(value || "")
-      .toLowerCase()
-      .includes(filterValue.toLowerCase());
+  // const globalFilterFn = (row, columnId, filterValue) => {
+  //   if (columnId !== "OrderNo") return true;
+  //   const value = row.getValue(columnId);
+  //   return String(value || "")
+  //     .toLowerCase()
+  //     .includes(filterValue.toLowerCase());
+  // };
+
+  // ✅ Global filter across ALL columns
+  const globalFilterFn = (row, _columnId, filterValue) => {
+    if (!filterValue) return true;
+    return row.getAllCells().some((cell) =>
+      String(cell.getValue() || "")
+        .toLowerCase()
+        .includes(filterValue.toLowerCase())
+    );
   };
 
   // const globalFilterFn = (row, columnId, filterValue) => {
@@ -309,6 +320,35 @@ const Home = () => {
   //   getPaginationRowModel: getPaginationRowModel(),
   // });
 
+  // const table = useReactTable({
+  //   data,
+  //   columns,
+  //   state: {
+  //     columnFilters,
+  //     globalFilter,
+  //     pagination: {
+  //       pageSize: data.length,
+  //       pageIndex: 0,
+  //     },
+  //   },
+  //   globalFilterFn, // ✅ for global search
+  //   onGlobalFilterChange: setGlobalFilter,
+  //   onColumnFiltersChange: setColumnFilters,
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  //   filterFns: {
+  //     text: (row, columnId, filterValue) => {
+  //       const value = row.getValue(columnId);
+  //       return String(value || "")
+  //         .toLowerCase()
+  //         .includes(filterValue.toLowerCase());
+  //     },
+  //   },
+  // });
+
+  // Highlight matching text in green
+
   const table = useReactTable({
     data,
     columns,
@@ -320,7 +360,7 @@ const Home = () => {
         pageIndex: 0,
       },
     },
-    globalFilterFn, // ✅ for global search
+    globalFilterFn, // ✅ now applies to all columns
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -336,8 +376,7 @@ const Home = () => {
     },
   });
 
-  // Highlight matching text in green
-  const highlightText = (text, search) => {
+  const highlightTextOld = (text, search) => {
     if (!search) return text;
     const regex = new RegExp(
       `(${search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
@@ -346,6 +385,43 @@ const Home = () => {
     return text.split(regex).map((part, index) =>
       part.toLowerCase() === search.toLowerCase() ? (
         <span key={index} className="bg-green-300 font-semibold">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
+  const highlightTextold1 = (text, searchTerm) => {
+    if (!searchTerm) return text;
+    const regex = new RegExp(`(${searchTerm})`, "gi");
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
+      part.toLowerCase() === searchTerm.toLowerCase() ? (
+        <span key={index} className="text-green-600 font-semibold">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
+  const highlightText = (text, searchTerm) => {
+    if (!searchTerm) return text;
+
+    // Escape regex special chars
+    const escapedSearch = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`(${escapedSearch})`, "gi");
+
+    return text.split(regex).map((part, index) =>
+      part.toLowerCase() === searchTerm.toLowerCase() ? (
+        <span
+          key={index}
+          className="bg-green-200 text-green-700 font-bold px-0.5 rounded"
+        >
           {part}
         </span>
       ) : (
@@ -494,15 +570,38 @@ const Home = () => {
                       >
                         {row.getVisibleCells().map((cell) => {
                           const cellValue = String(cell.getValue() ?? "");
+                          const isSelected =
+                            selectedCell?.rowId === row.id &&
+                            selectedCell?.colId === cell.column.id;
+
+                          // 🔑 Get this column's filter value if present
+                          const columnFilterValue =
+                            table
+                              .getState()
+                              .columnFilters.find(
+                                (f) => f.id === cell.column.id
+                              )?.value || "";
 
                           return (
                             <td
                               key={cell.id}
-                              className="px-4 py-3 border-t whitespace-nowrap"
+                              className={`px-4 py-3 border-t whitespace-nowrap cursor-pointer ${
+                                isSelected
+                                  ? "bg-yellow-300 border-2 border-[#7cb547]"
+                                  : ""
+                              }`}
+                              onClick={() =>
+                                setSelectedCell({
+                                  rowId: row.id,
+                                  colId: cell.column.id,
+                                })
+                              }
                             >
-                              {cell.column.id === "OrderNo"
-                                ? highlightText(cellValue, globalFilter)
-                                : cellValue}
+                              {/* ✅ If column filter exists, highlight with it, otherwise fallback to global */}
+                              {highlightText(
+                                cellValue,
+                                columnFilterValue || globalFilter
+                              )}
                             </td>
                           );
                         })}
