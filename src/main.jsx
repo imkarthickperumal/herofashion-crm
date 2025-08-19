@@ -1,10 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+import { registerSW } from "virtual:pwa-register";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+registerSW({
+  onNeedRefresh() {
+    console.log("New content available, refresh the app");
+  },
+  onOfflineReady() {
+    console.log("App ready to work offline");
+  },
+});
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
