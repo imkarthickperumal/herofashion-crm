@@ -393,7 +393,7 @@ const Home = () => {
           🧾 Hero Fashion Orders First Tab
         </h6>
 
-        <div className="bg-white/70 backdrop-blur-md shadow-xl rounded-1xl p-6">
+        <div className="bg-white/70 backdrop-blur-md shadow-xl rounded-1xl p-1">
           {loading ? (
             <SkeletonTable columnCount={columns.length} rowCount={6} />
           ) : (

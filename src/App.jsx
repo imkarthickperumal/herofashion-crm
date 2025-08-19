@@ -37,7 +37,7 @@ export default function App() {
 
           {/* Page content */}
           <div
-            className={`w-full px-4 overflow-x-hidden custom_scrollbar ${
+            className={`w-full px-1 overflow-x-hidden custom_scrollbar ${
               isSidebarOpen && "hide_thumb"
             }`}
           >
