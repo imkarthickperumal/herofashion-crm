@@ -28,22 +28,22 @@ const Navbar = ({ toggleSidebar }) => {
         <HeaderLeftSection toggleSidebar={toggleSidebar} />
 
         {/* Search input and mic section */}
-        <div className="h-10 flex gap-3 w-[600px] max-lg:w-[500px] max-md:hidden">
-          <form action="#" className="flex w-full">
-            <input
-              className="border border-neutral-300 w-full h-full rounded-l-full px-4 outline-none focus:border-blue-500 dark:bg-neutral-900 dark:border-neutral-500 dark:focus:border-blue-500 dark:text-neutral-300"
-              type="search"
-              placeholder="Search"
-              required
-            />
-            <button className="border border-neutral-300 px-5 border-l-0 rounded-r-full hover:bg-neutral-100 dark:border-neutral-500 hover:dark:bg-neutral-700">
-              <Search className="dark:text-neutral-400" />
+        {/* <div className="h-10 flex gap-3 w-[600px] max-lg:w-[500px] max-md:hidden">
+            <form action="#" className="flex w-full">
+              <input
+                className="border border-neutral-300 w-full h-full rounded-l-full px-4 outline-none focus:border-blue-500 dark:bg-neutral-900 dark:border-neutral-500 dark:focus:border-blue-500 dark:text-neutral-300"
+                type="search"
+                placeholder="Search"
+                required
+              />
+              <button className="border border-neutral-300 px-5 border-l-0 rounded-r-full hover:bg-neutral-100 dark:border-neutral-500 hover:dark:bg-neutral-700">
+                <Search className="dark:text-neutral-400" />
+              </button>
+            </form>
+            <button className="p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700">
+              <Mic className="dark:text-neutral-400" />
             </button>
-          </form>
-          {/* <button className="p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700">
-            <Mic className="dark:text-neutral-400" />
-          </button> */}
-        </div>
+          </div> */}
 
         {/* User and dark mode toggle section */}
         <div className="flex items-center gap-4">
