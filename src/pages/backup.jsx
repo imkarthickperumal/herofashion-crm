@@ -10,7 +10,7 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { getOrderDelivery } from "../utils/api";
+import { getOrders } from "../utils/api";
 import { Input } from "../components/ui/input";
 import { io } from "socket.io-client";
 
@@ -23,7 +23,68 @@ const socket = io(
   }
 );
 
-const Home = () => {
+const generateDummyData = (count = 350) => {
+  const statuses = [
+    "Pending",
+    "Completed",
+    "In Progress",
+    "Shipped",
+    "Processing",
+  ];
+  const yesNo = ["Yes", "No"];
+  const merchNames = [
+    "John",
+    "Jane",
+    "Michael",
+    "David",
+    "Emily",
+    "Sophia",
+    "Daniel",
+    "Olivia",
+    "William",
+    "Isabella",
+  ];
+
+  return Array.from({ length: count }, (_, i) => {
+    const randomStatus = () =>
+      statuses[Math.floor(Math.random() * statuses.length)];
+    const randomYesNo = () => yesNo[Math.floor(Math.random() * yesNo.length)];
+    const randomMerch = () =>
+      merchNames[Math.floor(Math.random() * merchNames.length)];
+    const randomYear = () => 2024 + Math.floor(Math.random() * 3); // 2024-2026
+    const randomDate = () => {
+      const start = new Date(2024, 0, 1);
+      const end = new Date(2026, 11, 31);
+      return new Date(
+        start.getTime() + Math.random() * (end.getTime() - start.getTime())
+      )
+        .toISOString()
+        .split("T")[0];
+    };
+
+    return {
+      OrderNo: `DUMMY${String(i + 1).padStart(3, "0")}`,
+      Finalyeardel: randomYear(),
+      Finaldel: randomDate(),
+      MainImagePath: `https://picsum.photos/200?random=${i + 1}`,
+      "Delivery 2": randomStatus(),
+      "Cutting 5": randomStatus(),
+      "Fabric 8": randomStatus(),
+      "Dyeing 14": randomStatus(),
+      Rib18: randomYesNo(),
+      "Merch 50": randomMerch(),
+      43: `43-${String.fromCharCode(65 + (i % 26))}`, // A-Z
+      "Organic 46": randomYesNo(),
+      90: `Check${i + 1}`,
+      "CONTRACT CUTTING 99": randomStatus(),
+      "DY ST 119": randomStatus(),
+    };
+  });
+};
+
+const dummyData = generateDummyData(350);
+
+const backup = () => {
   const [data, setData] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState([]);
@@ -36,18 +97,23 @@ const Home = () => {
 
   const fetchData = async () => {
     try {
-      const result = await getOrderDelivery();
-      console.log("API Data", result);
+      const result = await getOrders();
+      console.log("API Data", result.data);
 
-      if (Array.isArray(result) && result.length > 0) {
-        setData(result);
+      if (Array.isArray(result?.data) && result.data.length > 0) {
+        setData(result.data);
+        // setData(dummyData);
       } else {
         // console.warn("🚨 Unexpected API data:", result.data);
         setData([]); // fallback
+        // setData(dummyData);
+        // setData(dummyData);
       }
     } catch (err) {
       console.error("❌ Failed to fetch data:", err);
       setError("Failed to load data");
+      // setData([]); // fallback to avoid crash
+      setData(dummyData);
     } finally {
       setLoading(false);
     }
@@ -86,23 +152,22 @@ const Home = () => {
       {
         accessorKey: "OrderNo",
         header: "Order No",
-        enableColumnFilter: true,
-        filterFn: "text",
-      },
-      {
-        accessorKey: "Finalyeardel",
-        header: "Finalyear del",
         cell: (info) => info.getValue(),
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "Finaldel",
-        header: "Final del",
+        accessorKey: "Finalyeardel",
+        header: "Delivery Year",
         enableColumnFilter: true,
         filterFn: "text",
       },
-
+      {
+        accessorKey: "Finaldel",
+        header: "Delivery Date",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
       {
         accessorKey: "MainImagePath",
         header: "Main Image",
@@ -122,36 +187,71 @@ const Home = () => {
         },
       },
       {
-        accessorKey: "OrderNo_Udf",
-        header: "Order No Udf",
+        accessorKey: "CompanyID",
+        header: "CompanyID",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "Organic 46",
-        header: "Organic 46",
+        accessorKey: "Year",
+        header: "Year",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "Fabric 8",
+        accessorKey: "OrderType",
         header: "Fabric 8",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "Yarn 20",
-        header: "Yarn 20",
+        accessorKey: "CustomerID",
+        header: "CustomerID",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "Stitching 45",
-        header: "Stitching 45",
+        accessorKey: "DepartmentID",
+        header: "Rib18",
         enableColumnFilter: true,
         filterFn: "text",
       },
-
+      {
+        accessorKey: "PONo",
+        header: "PONo",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "PODate",
+        header: "PODate",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "Quantity",
+        header: "Quantity",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "QuantityActual",
+        header: "QuantityActual",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "QuantityExtra",
+        header: "QuantityExtra",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "StyleName",
+        header: "StyleName",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
       {
         id: "actions",
         header: "Actions",
@@ -175,6 +275,15 @@ const Home = () => {
     []
   );
 
+  // Custom global filter that filters ONLY on OrderNo column
+  // const globalFilterFn = (row, columnId, filterValue) => {
+  //   if (columnId !== "OrderNo") return true;
+  //   const value = row.getValue(columnId);
+  //   return String(value || "")
+  //     .toLowerCase()
+  //     .includes(filterValue.toLowerCase());
+  // };
+
   // ✅ Global filter across ALL columns
   const globalFilterFn = (row, _columnId, filterValue) => {
     if (!filterValue) return true;
@@ -184,6 +293,59 @@ const Home = () => {
         .includes(filterValue.toLowerCase())
     );
   };
+
+  // const globalFilterFn = (row, columnId, filterValue) => {
+  //   const value = row.getValue(columnId);
+  //   return String(value || "")
+  //     .toLowerCase()
+  //     .includes(filterValue.toLowerCase());
+  // };
+
+  // const table = useReactTable({
+  //   data,
+  //   columns,
+  //   state: {
+  //     columnFilters,
+  //     globalFilter,
+  //     pagination: {
+  //       pageSize: data.length,
+  //       pageIndex: 0,
+  //     },
+  //   },
+  //   globalFilterFn,
+  //   onGlobalFilterChange: setGlobalFilter,
+  //   onColumnFiltersChange: setColumnFilters,
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  // });
+
+  // const table = useReactTable({
+  //   data,
+  //   columns,
+  //   state: {
+  //     columnFilters,
+  //     globalFilter,
+  //     pagination: {
+  //       pageSize: data.length,
+  //       pageIndex: 0,
+  //     },
+  //   },
+  //   globalFilterFn, // ✅ for global search
+  //   onGlobalFilterChange: setGlobalFilter,
+  //   onColumnFiltersChange: setColumnFilters,
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  //   filterFns: {
+  //     text: (row, columnId, filterValue) => {
+  //       const value = row.getValue(columnId);
+  //       return String(value || "")
+  //         .toLowerCase()
+  //         .includes(filterValue.toLowerCase());
+  //     },
+  //   },
+  // });
 
   // Highlight matching text in green
 
@@ -213,6 +375,39 @@ const Home = () => {
       },
     },
   });
+
+  const highlightTextOld = (text, search) => {
+    if (!search) return text;
+    const regex = new RegExp(
+      `(${search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+      "gi"
+    ); // escape special chars
+    return text.split(regex).map((part, index) =>
+      part.toLowerCase() === search.toLowerCase() ? (
+        <span key={index} className="bg-green-300 font-semibold">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
+  const highlightTextold1 = (text, searchTerm) => {
+    if (!searchTerm) return text;
+    const regex = new RegExp(`(${searchTerm})`, "gi");
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
+      part.toLowerCase() === searchTerm.toLowerCase() ? (
+        <span key={index} className="text-green-600 font-semibold">
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
 
   const highlightText = (text, searchTerm) => {
     if (!searchTerm) return text;
@@ -320,15 +515,8 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-1 mt-2 rounded-2xl">
       <div className="max-w-10xl mx-auto">
         <h6 className="text-1xl font-semibold text-gray-800 mb-6 text-start mt-2 ml-2">
-          Order Delivery
+          🧾 Hero Fashion Orders First Tab
         </h6>
-
-        {error && (
-          <h6 className="text-center text-red-600 font-bold m-3">
-            {" "}
-            API Response {error}
-          </h6>
-        )}
 
         <div className="bg-white/70 backdrop-blur-md shadow-xl rounded-1xl p-1">
           {loading ? (
@@ -580,7 +768,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default backup;
 
 const SkeletonTable = ({ columnCount = 10, rowCount = 5 }) => {
   return (

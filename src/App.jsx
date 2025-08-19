@@ -5,8 +5,8 @@ import Sidebar from "./components/Sidebar";
 
 // Import pages
 import Home from "./pages/Home";
-import Stock from "./pages/Stock";
 import EMPWise from "./pages/EMPWise";
+import Overall from "./pages/Overall";
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function App() {
           >
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/stock" element={<Stock />} />
+              <Route path="/overall" element={<Overall />} />
               <Route path="/empwise" element={<EMPWise />} />
             </Routes>
           </div>

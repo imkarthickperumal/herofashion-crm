@@ -7,13 +7,13 @@ export const sidebarLinks = [
     links: [
       {
         icon: "Home",
-        title: "Home",
+        title: "Order Delivery",
         url: "/",
       },
       {
         icon: "Trophy",
-        title: "Stock",
-        url: "/stock",
+        title: "Overall",
+        url: "/overall",
       },
       {
         icon: "TvMinimal",

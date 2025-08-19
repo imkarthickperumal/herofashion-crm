@@ -10,7 +10,7 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { getOrders } from "../utils/api";
+import { getEmpwise } from "../utils/api";
 import { Input } from "../components/ui/input";
 import { io } from "socket.io-client";
 
@@ -22,67 +22,6 @@ const socket = io(
     transports: ["websocket"],
   }
 );
-
-const generateDummyData = (count = 350) => {
-  const statuses = [
-    "Pending",
-    "Completed",
-    "In Progress",
-    "Shipped",
-    "Processing",
-  ];
-  const yesNo = ["Yes", "No"];
-  const merchNames = [
-    "John",
-    "Jane",
-    "Michael",
-    "David",
-    "Emily",
-    "Sophia",
-    "Daniel",
-    "Olivia",
-    "William",
-    "Isabella",
-  ];
-
-  return Array.from({ length: count }, (_, i) => {
-    const randomStatus = () =>
-      statuses[Math.floor(Math.random() * statuses.length)];
-    const randomYesNo = () => yesNo[Math.floor(Math.random() * yesNo.length)];
-    const randomMerch = () =>
-      merchNames[Math.floor(Math.random() * merchNames.length)];
-    const randomYear = () => 2024 + Math.floor(Math.random() * 3); // 2024-2026
-    const randomDate = () => {
-      const start = new Date(2024, 0, 1);
-      const end = new Date(2026, 11, 31);
-      return new Date(
-        start.getTime() + Math.random() * (end.getTime() - start.getTime())
-      )
-        .toISOString()
-        .split("T")[0];
-    };
-
-    return {
-      OrderNo: `DUMMY${String(i + 1).padStart(3, "0")}`,
-      Finalyeardel: randomYear(),
-      Finaldel: randomDate(),
-      MainImagePath: `https://picsum.photos/200?random=${i + 1}`,
-      "Delivery 2": randomStatus(),
-      "Cutting 5": randomStatus(),
-      "Fabric 8": randomStatus(),
-      "Dyeing 14": randomStatus(),
-      Rib18: randomYesNo(),
-      "Merch 50": randomMerch(),
-      43: `43-${String.fromCharCode(65 + (i % 26))}`, // A-Z
-      "Organic 46": randomYesNo(),
-      90: `Check${i + 1}`,
-      "CONTRACT CUTTING 99": randomStatus(),
-      "DY ST 119": randomStatus(),
-    };
-  });
-};
-
-const dummyData = generateDummyData(350);
 
 const EMPWise = () => {
   const [data, setData] = useState([]);
@@ -97,23 +36,18 @@ const EMPWise = () => {
 
   const fetchData = async () => {
     try {
-      const result = await getOrders();
-      console.log("API Data", result.data);
+      const result = await getEmpwise();
+      console.log("API Data", result);
 
-      if (Array.isArray(result?.data) && result.data.length > 0) {
-        setData(result.data);
-        // setData(dummyData);
+      if (Array.isArray(result) && result.length > 0) {
+        setData(result);
       } else {
         // console.warn("🚨 Unexpected API data:", result.data);
         setData([]); // fallback
-        // setData(dummyData);
-        // setData(dummyData);
       }
     } catch (err) {
       console.error("❌ Failed to fetch data:", err);
       setError("Failed to load data");
-      // setData([]); // fallback to avoid crash
-      setData(dummyData);
     } finally {
       setLoading(false);
     }
@@ -150,105 +84,70 @@ const EMPWise = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "OrderNo",
-        header: "Order No",
+        accessorKey: "code",
+        header: "code",
         cell: (info) => info.getValue(),
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "Finalyeardel",
-        header: "Delivery Year",
+        accessorKey: "dept",
+        header: "dept",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "Finaldel",
-        header: "Delivery Date",
+        accessorKey: "name",
+        header: "Name",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+
+      {
+        accessorKey: "shift_contract",
+        header: "Shift Contract",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "MainImagePath",
-        header: "Main Image",
-        cell: ({ getValue }) => {
-          const imgUrl = getValue() || "https://picsum.photos/200/300";
-          return (
-            <img
-              src={imgUrl}
-              alt="Main"
-              className="h-14 w-14 object-cover rounded border"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "https://picsum.photos/200/300";
-              }}
-            />
-          );
-        },
-      },
-      {
-        accessorKey: "CompanyID",
-        header: "CompanyID",
+        accessorKey: "mobile",
+        header: "Mobile",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "Year",
-        header: "Year",
+        accessorKey: "status",
+        header: "Status",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "OrderType",
-        header: "Fabric 8",
+        accessorKey: "mcategory",
+        header: "M Category",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "CustomerID",
-        header: "CustomerID",
+        accessorKey: "tasstaff",
+        header: "tasstaff",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "DepartmentID",
-        header: "Rib18",
+        accessorKey: "curwrkunit",
+        header: "curwrkunit",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "PONo",
-        header: "PONo",
+        accessorKey: "shift_contract",
+        header: "Shift Contract",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "PODate",
-        header: "PODate",
-        enableColumnFilter: true,
-        filterFn: "text",
-      },
-      {
-        accessorKey: "Quantity",
-        header: "Quantity",
-        enableColumnFilter: true,
-        filterFn: "text",
-      },
-      {
-        accessorKey: "QuantityActual",
-        header: "QuantityActual",
-        enableColumnFilter: true,
-        filterFn: "text",
-      },
-      {
-        accessorKey: "QuantityExtra",
-        header: "QuantityExtra",
-        enableColumnFilter: true,
-        filterFn: "text",
-      },
-      {
-        accessorKey: "StyleName",
-        header: "StyleName",
+        accessorKey: "wrkunit",
+        header: "wrkunit",
         enableColumnFilter: true,
         filterFn: "text",
       },
@@ -275,15 +174,6 @@ const EMPWise = () => {
     []
   );
 
-  // Custom global filter that filters ONLY on OrderNo column
-  // const globalFilterFn = (row, columnId, filterValue) => {
-  //   if (columnId !== "OrderNo") return true;
-  //   const value = row.getValue(columnId);
-  //   return String(value || "")
-  //     .toLowerCase()
-  //     .includes(filterValue.toLowerCase());
-  // };
-
   // ✅ Global filter across ALL columns
   const globalFilterFn = (row, _columnId, filterValue) => {
     if (!filterValue) return true;
@@ -293,61 +183,6 @@ const EMPWise = () => {
         .includes(filterValue.toLowerCase())
     );
   };
-
-  // const globalFilterFn = (row, columnId, filterValue) => {
-  //   const value = row.getValue(columnId);
-  //   return String(value || "")
-  //     .toLowerCase()
-  //     .includes(filterValue.toLowerCase());
-  // };
-
-  // const table = useReactTable({
-  //   data,
-  //   columns,
-  //   state: {
-  //     columnFilters,
-  //     globalFilter,
-  //     pagination: {
-  //       pageSize: data.length,
-  //       pageIndex: 0,
-  //     },
-  //   },
-  //   globalFilterFn,
-  //   onGlobalFilterChange: setGlobalFilter,
-  //   onColumnFiltersChange: setColumnFilters,
-  //   getCoreRowModel: getCoreRowModel(),
-  //   getFilteredRowModel: getFilteredRowModel(),
-  //   getPaginationRowModel: getPaginationRowModel(),
-  // });
-
-  // const table = useReactTable({
-  //   data,
-  //   columns,
-  //   state: {
-  //     columnFilters,
-  //     globalFilter,
-  //     pagination: {
-  //       pageSize: data.length,
-  //       pageIndex: 0,
-  //     },
-  //   },
-  //   globalFilterFn, // ✅ for global search
-  //   onGlobalFilterChange: setGlobalFilter,
-  //   onColumnFiltersChange: setColumnFilters,
-  //   getCoreRowModel: getCoreRowModel(),
-  //   getFilteredRowModel: getFilteredRowModel(),
-  //   getPaginationRowModel: getPaginationRowModel(),
-  //   filterFns: {
-  //     text: (row, columnId, filterValue) => {
-  //       const value = row.getValue(columnId);
-  //       return String(value || "")
-  //         .toLowerCase()
-  //         .includes(filterValue.toLowerCase());
-  //     },
-  //   },
-  // });
-
-  // Highlight matching text in green
 
   const table = useReactTable({
     data,
@@ -375,39 +210,6 @@ const EMPWise = () => {
       },
     },
   });
-
-  const highlightTextOld = (text, search) => {
-    if (!search) return text;
-    const regex = new RegExp(
-      `(${search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
-      "gi"
-    ); // escape special chars
-    return text.split(regex).map((part, index) =>
-      part.toLowerCase() === search.toLowerCase() ? (
-        <span key={index} className="bg-green-300 font-semibold">
-          {part}
-        </span>
-      ) : (
-        part
-      )
-    );
-  };
-
-  const highlightTextold1 = (text, searchTerm) => {
-    if (!searchTerm) return text;
-    const regex = new RegExp(`(${searchTerm})`, "gi");
-    const parts = text.split(regex);
-
-    return parts.map((part, index) =>
-      part.toLowerCase() === searchTerm.toLowerCase() ? (
-        <span key={index} className="text-green-600 font-semibold">
-          {part}
-        </span>
-      ) : (
-        part
-      )
-    );
-  };
 
   const highlightText = (text, searchTerm) => {
     if (!searchTerm) return text;
@@ -517,7 +319,11 @@ const EMPWise = () => {
         <h6 className="text-1xl font-semibold text-gray-800 mb-6 text-start mt-2 ml-2">
           EMPWise Orders
         </h6>
-
+        {error && (
+          <h6 className="text-center text-red-600 font-bold m-3">
+            API Response {error}
+          </h6>
+        )}
         <div className="bg-white/70 backdrop-blur-md shadow-xl rounded-1xl p-1">
           {loading ? (
             <SkeletonTable columnCount={columns.length} rowCount={6} />
