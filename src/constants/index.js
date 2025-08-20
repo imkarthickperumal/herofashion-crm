@@ -20,6 +20,11 @@ export const sidebarLinks = [
         title: "EMPwise",
         url: "/empwise",
       },
+      {
+        icon: "History",
+        title: "TX Order",
+        url: "/tx_order",
+      },
      
      
     ],

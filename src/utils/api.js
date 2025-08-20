@@ -24,3 +24,6 @@ export const getOverall = () =>
 
 export const getEmpwise = () =>
   fetchWithTiming("http://103.125.155.133:7005/empwise/");
+
+export const getTXOrder = () =>
+  fetchWithTiming("https://dev.admin.herofashion.in/dhana/api/tx_order/");

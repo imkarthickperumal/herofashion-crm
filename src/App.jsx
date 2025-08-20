@@ -7,6 +7,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import EMPWise from "./pages/EMPWise";
 import Overall from "./pages/Overall";
+import TXorder from "./pages/TXorder";
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -81,6 +82,17 @@ export default function App() {
                 path="/empwise"
                 element={
                   <EMPWise
+                    globalFilter={globalFilter}
+                    onAddNew={setAddNewFn}
+                    onExportExcel={setExportExcelFn}
+                    onExportPDF={setExportPDFFn}
+                  />
+                }
+              />
+              <Route
+                path="/tx_order"
+                element={
+                  <TXorder
                     globalFilter={globalFilter}
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}

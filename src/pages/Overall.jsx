@@ -336,10 +336,6 @@ const Overall = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-1 mt-2 rounded-2xl">
       <div className="max-w-10xl mx-auto">
-        <h6 className="text-1xl font-semibold text-gray-800 mb-6 text-start mt-2 ml-2">
-          Overall
-        </h6>
-
         {error && (
           <h6 className="text-center text-red-600 font-bold m-3">
             API Response {error}

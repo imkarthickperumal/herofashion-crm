@@ -10,9 +10,9 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { getEmpwise } from "../utils/api";
+import { getTXOrder } from "../utils/api";
 
-const EMPWise = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
+const TXorder = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
   const [data, setData] = useState([]);
   const [setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState([]);
@@ -25,7 +25,7 @@ const EMPWise = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
 
   const fetchData = async () => {
     try {
-      const result = await getEmpwise();
+      const result = await getTXOrder();
       console.log("API Data", result);
 
       if (Array.isArray(result) && result.length > 0) {
@@ -50,70 +50,82 @@ const EMPWise = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "code",
-        header: "code",
+        accessorKey: "id",
+        header: "ID",
         cell: (info) => info.getValue(),
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "dept",
-        header: "dept",
+        accessorKey: "companyid",
+        header: "Company ID",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "name",
-        header: "Name",
+        accessorKey: "orderno",
+        header: "Order No",
         enableColumnFilter: true,
         filterFn: "text",
       },
 
       {
-        accessorKey: "shift_contract",
-        header: "Shift Contract",
+        accessorKey: "year",
+        header: "Year",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "mobile",
-        header: "Mobile",
+        accessorKey: "no",
+        header: "No",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: "styleno",
+        header: "Style No",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "mcategory",
-        header: "M Category",
+        accessorKey: "colourno",
+        header: "Colour No",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "tasstaff",
-        header: "tasstaff",
+        accessorKey: "sizeno",
+        header: "Size No",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "curwrkunit",
-        header: "curwrkunit",
+        accessorKey: "quantity",
+        header: "Quantity",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "shift_contract",
-        header: "Shift Contract",
+        accessorKey: "extraqty",
+        header: "Extra Qty",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "wrkunit",
-        header: "wrkunit",
+        accessorKey: "Price",
+        header: "Price",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "retailprice",
+        header: "Retail Price",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "purchaseprice",
+        header: "Purchase Price",
         enableColumnFilter: true,
         filterFn: "text",
       },
@@ -513,7 +525,7 @@ const EMPWise = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
   );
 };
 
-export default EMPWise;
+export default TXorder;
 
 const SkeletonTable = ({ columnCount = 10, rowCount = 5 }) => {
   return (
