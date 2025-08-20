@@ -46,7 +46,7 @@ const Navbar = ({ toggleSidebar }) => {
           </div> */}
 
         {/* User and dark mode toggle section */}
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <button className="p-2 rounded-full md:hidden hover:bg-neutral-200 hover:dark:bg-neutral-700">
             <Search className="dark:text-neutral-400" />
           </button>
@@ -60,12 +60,12 @@ const Navbar = ({ toggleSidebar }) => {
               <MoonStar className="dark:text-neutral-400" />
             )}
           </button>
-          {/* <img
+          <img
             className="w-8 h-8 rounded-full cursor-pointer"
             src={UserImg}
             alt="User Image"
-          /> */}
-        </div>
+          />
+        </div> */}
       </nav>
     </header>
   );

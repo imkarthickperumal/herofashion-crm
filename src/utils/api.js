@@ -17,7 +17,7 @@ const fetchWithTiming = async (url) => {
 
 // ✅ APIs
 export const getOrderDelivery = () =>
-  fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_delivery/");
+  fetchWithTiming("https://dev.admin.herofashion.in/dhana/api/order_delivery/");
 
 export const getOverall = () =>
   fetchWithTiming("http://103.125.155.133:7005/overall");
