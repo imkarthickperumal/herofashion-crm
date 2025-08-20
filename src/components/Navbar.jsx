@@ -1,80 +1,70 @@
-import { Menu, Mic, MoonStar, Search, Sun } from "lucide-react";
+import { Menu } from "lucide-react";
 import Logo from "../assets/logo.png";
-import UserImg from "../assets/user.jpg";
 import { useEffect, useState } from "react";
+import { Input } from "./ui/input";
 
-const Navbar = ({ toggleSidebar }) => {
-  // Initialize dark mode state based on localStorage value
+const Navbar = ({
+  toggleSidebar,
+  globalFilter,
+  setGlobalFilter,
+  onAddNew,
+  onExportExcel,
+  onExportPDF,
+}) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem("darkMode");
     return savedMode ? JSON.parse(savedMode) : false;
   });
 
-  // Effect to update body class and localStorage when dark mode state changes
   useEffect(() => {
     document.body.classList[isDarkMode ? "add" : "remove"]("dark");
     localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
   }, [isDarkMode]);
 
-  // Function to toggle dark mode state
-  const toggleDarkMode = () => {
-    setIsDarkMode((prevMode) => !prevMode);
-  };
-
   return (
-    <header className="sticky top-0 z-10 bg-white dark:bg-neutral-900">
-      <nav className="flex items-center justify-between py-2 pb-5 px-4">
-        {/* Rendering left section of the navbar */}
-        <HeaderLeftSection toggleSidebar={toggleSidebar} />
+    <header className="sticky top-0 z-10 bg-white dark:bg-neutral-900 shadow-sm">
+      <nav className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 px-4 gap-3">
+        {/* Left side: Logo + Search */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-1/2">
+          <HeaderLeftSection toggleSidebar={toggleSidebar} />
+          <Input
+            value={globalFilter}
+            placeholder="🔍 Search..."
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            className="w-full sm:w-80 rounded-lg border border-gray-300 px-4 py-2 text-gray-800 shadow-sm 
+              dark:bg-neutral-800 dark:text-gray-300 dark:border-neutral-600 focus:outline-none"
+          />
+        </div>
 
-        {/* Search input and mic section */}
-        {/* <div className="h-10 flex gap-3 w-[600px] max-lg:w-[500px] max-md:hidden">
-            <form action="#" className="flex w-full">
-              <input
-                className="border border-neutral-300 w-full h-full rounded-l-full px-4 outline-none focus:border-blue-500 dark:bg-neutral-900 dark:border-neutral-500 dark:focus:border-blue-500 dark:text-neutral-300"
-                type="search"
-                placeholder="Search"
-                required
-              />
-              <button className="border border-neutral-300 px-5 border-l-0 rounded-r-full hover:bg-neutral-100 dark:border-neutral-500 hover:dark:bg-neutral-700">
-                <Search className="dark:text-neutral-400" />
-              </button>
-            </form>
-            <button className="p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 hover:dark:bg-neutral-700">
-              <Mic className="dark:text-neutral-400" />
-            </button>
-          </div> */}
-
-        {/* User and dark mode toggle section */}
-        {/* <div className="flex items-center gap-4">
-          <button className="p-2 rounded-full md:hidden hover:bg-neutral-200 hover:dark:bg-neutral-700">
-            <Search className="dark:text-neutral-400" />
+        {/* Right side: Action buttons */}
+        <div className="flex flex-wrap gap-2 sm:gap-3">
+          {/* <button
+            onClick={onAddNew}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
+          >
+            ➕ Add New
+          </button> */}
+          <button
+            onClick={onExportExcel}
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm"
+          >
+            Export Excel
           </button>
           <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-full hover:bg-neutral-200 hover:dark:bg-neutral-700"
+            onClick={onExportPDF}
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm"
           >
-            {isDarkMode ? (
-              <Sun className="dark:text-neutral-400" />
-            ) : (
-              <MoonStar className="dark:text-neutral-400" />
-            )}
+            Export PDF
           </button>
-          <img
-            className="w-8 h-8 rounded-full cursor-pointer"
-            src={UserImg}
-            alt="User Image"
-          />
-        </div> */}
+        </div>
       </nav>
     </header>
   );
 };
 
-// Component for the left section of the navbar
 export const HeaderLeftSection = ({ toggleSidebar }) => {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex items-center gap-3">
       <button
         onClick={toggleSidebar}
         className="p-2 rounded-full hover:bg-neutral-200 hover:dark:bg-neutral-700"
@@ -83,7 +73,7 @@ export const HeaderLeftSection = ({ toggleSidebar }) => {
       </button>
       <a className="flex items-center gap-2" href="#">
         <img src={Logo} width={32} alt="Logo" />
-        <h2 className="text-xl font-bold dark:text-neutral-300">
+        <h2 className="text-lg sm:text-xl font-bold dark:text-neutral-300">
           Hero Fashion
         </h2>
       </a>

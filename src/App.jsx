@@ -10,6 +10,12 @@ import Overall from "./pages/Overall";
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [globalFilter, setGlobalFilter] = useState("");
+
+  // These hold the active page’s functions
+  const [addNewFn, setAddNewFn] = useState(null);
+  const [exportExcelFn, setExportExcelFn] = useState(null);
+  const [exportPDFFn, setExportPDFFn] = useState(null);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -20,7 +26,14 @@ export default function App() {
   return (
     <Router>
       <div className="max-h-screen flex flex-col overflow-hidden dark:bg-neutral-900">
-        <Navbar toggleSidebar={toggleSidebar} />
+        <Navbar
+          toggleSidebar={toggleSidebar}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          onAddNew={() => addNewFn && addNewFn()}
+          onExportExcel={() => exportExcelFn && exportExcelFn()}
+          onExportPDF={() => exportPDFFn && exportPDFFn()}
+        />
         <div className="flex overflow-auto">
           <Sidebar
             toggleSidebar={toggleSidebar}
@@ -42,9 +55,39 @@ export default function App() {
             }`}
           >
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/overall" element={<Overall />} />
-              <Route path="/empwise" element={<EMPWise />} />
+              <Route
+                path="/"
+                element={
+                  <Home
+                    globalFilter={globalFilter}
+                    onAddNew={setAddNewFn}
+                    onExportExcel={setExportExcelFn}
+                    onExportPDF={setExportPDFFn}
+                  />
+                }
+              />
+              <Route
+                path="/overall"
+                element={
+                  <Overall
+                    globalFilter={globalFilter}
+                    onAddNew={setAddNewFn}
+                    onExportExcel={setExportExcelFn}
+                    onExportPDF={setExportPDFFn}
+                  />
+                }
+              />
+              <Route
+                path="/empwise"
+                element={
+                  <EMPWise
+                    globalFilter={globalFilter}
+                    onAddNew={setAddNewFn}
+                    onExportExcel={setExportExcelFn}
+                    onExportPDF={setExportPDFFn}
+                  />
+                }
+              />
             </Routes>
           </div>
         </div>

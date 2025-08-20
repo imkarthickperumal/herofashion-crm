@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
@@ -11,21 +11,10 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { getOverall } from "../utils/api";
-import { Input } from "../components/ui/input";
-import { io } from "socket.io-client";
 
-const socket = io(
-  window.location.hostname === "localhost"
-    ? "http://localhost:8001"
-    : "http://103.125.155.133:7005/overall",
-  {
-    transports: ["websocket"],
-  }
-);
-
-const Overall = () => {
+const Overall = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
   const [data, setData] = useState([]);
-  const [globalFilter, setGlobalFilter] = useState("");
+  const [setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -56,29 +45,6 @@ const Overall = () => {
   // ✅ Initial data load
   useEffect(() => {
     fetchData();
-  }, []);
-
-  // ✅ Listen for live updates from backend
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("🟢 Connected to socket:", socket.id);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("🔴 Disconnected from socket");
-    });
-
-    socket.on("ordersUpdated", () => {
-      console.log("🔁 Orders updated - fetching new data...");
-      fetchData();
-    });
-
-    return () => {
-      socket.off("ordersUpdated");
-      socket.off("connect");
-      socket.off("disconnect");
-      // socket.disconnect();
-    };
   }, []);
 
   const columns = useMemo(
@@ -262,13 +228,6 @@ const Overall = () => {
     );
   };
 
-  const filteredData = table.getFilteredRowModel().rows.map((row) =>
-    row.getVisibleCells().reduce((acc, cell) => {
-      acc[cell.column.id] = cell.getValue();
-      return acc;
-    }, {})
-  );
-
   // ✅ Handle arrow key movement
   const handleKeyDown = (e) => {
     if (!selectedCell) return;
@@ -318,31 +277,62 @@ const Overall = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedCell, table]);
 
-  const handleExportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(filteredData);
+  // ✅ stable filtered data
+  const filteredData = useMemo(() => {
+    return table.getFilteredRowModel().rows.map((row) =>
+      row.getVisibleCells().reduce((acc, cell) => {
+        acc[cell.column.id] = cell.getValue();
+        return acc;
+      }, {})
+    );
+  }, [table.getFilteredRowModel().rows]);
+
+  // Handlers
+  const handleAddNew = useCallback(() => {
+    setShowModal(false);
+  }, []);
+
+  const handleExportExcel = useCallback((rows) => {
+    const ws = XLSX.utils.json_to_sheet(rows);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Orders");
+    XLSX.utils.book_append_sheet(wb, ws, "Overall");
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const dataBlob = new Blob([excelBuffer], {
       type: "application/octet-stream",
     });
-    saveAs(dataBlob, "orders.xlsx");
-  };
+    saveAs(dataBlob, "overall.xlsx");
+  }, []);
 
-  const handleExportPDF = () => {
-    const doc = new jsPDF();
-    doc.text("Orders", 14, 10);
-    autoTable(doc, {
-      head: [columns.map((col) => col.header)],
-      body: filteredData.map((row) =>
-        columns.map((col) => row[col.accessorKey])
-      ),
-      startY: 20,
-      styles: { fontSize: 8 },
-    });
-    doc.save("orders.pdf");
-  };
+  const handleExportPDF = useCallback(
+    (rows) => {
+      const doc = new jsPDF();
+      doc.text("Overall", 14, 10);
+      autoTable(doc, {
+        head: [columns.map((col) => col.header)],
+        body: rows.map((row) => columns.map((col) => row[col.accessorKey])),
+        startY: 20,
+        styles: { fontSize: 8 },
+      });
+      doc.save("overall.pdf");
+    },
+    [columns]
+  );
 
+  // ✅ Only pass function references, not immediate calls
+  useEffect(() => {
+    // onAddNew(() => handleAddNew());
+    // onAddNew(handleAddNew);
+    onExportExcel(() => () => handleExportExcel(filteredData));
+    onExportPDF(() => () => handleExportPDF(filteredData));
+  }, [
+    // onAddNew,
+    onExportExcel,
+    onExportPDF,
+    // handleAddNew,
+    handleExportExcel,
+    handleExportPDF,
+    filteredData,
+  ]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-1 mt-2 rounded-2xl">
       <div className="max-w-10xl mx-auto">
@@ -361,45 +351,6 @@ const Overall = () => {
             <SkeletonTable columnCount={columns.length} rowCount={6} />
           ) : (
             <>
-              <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
-                <div className="max-w-md w-full flex items-center justify-between">
-                  <Input
-                    value={globalFilter}
-                    onChange={(e) => setGlobalFilter(e.target.value)}
-                    placeholder="🔍 Search orders..."
-                    className="w-full rounded-lg border-gray-300 shadow-sm px-4 py-2 text-gray-800"
-                  />
-                  <span className="ml-2 text-sm text-gray-700 font-semibold whitespace-nowrap">
-                    Showing {table.getFilteredRowModel().rows.length} rows
-                  </span>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      setShowModal(true);
-                      setEditRowIndex(null);
-                      setNewRow({});
-                    }}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
-                  >
-                    ➕ Add New
-                  </button>
-                  <button
-                    onClick={handleExportExcel}
-                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm"
-                  >
-                    Export Excel
-                  </button>
-                  <button
-                    onClick={handleExportPDF}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm"
-                  >
-                    Export PDF
-                  </button>
-                </div>
-              </div>
-
               {/* 🧾 Table */}
               <div className="w-full overflow-x-auto rounded-lg border border-gray-200 transition-opacity duration-500">
                 <table className="min-w-[1000px] w-full text-sm text-gray-800">
@@ -531,7 +482,6 @@ const Overall = () => {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="relative bg-white p-6 rounded-lg w-[90%] max-w-3xl shadow-lg space-y-4 overflow-y-auto max-h-[80vh]">
-            {/* ❌ Cancel Icon Top Right */}
             <button
               onClick={() => setShowModal(false)}
               className="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-xl"
@@ -543,13 +493,7 @@ const Overall = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {columns.map((col) => {
-                // if (col.accessorKey === "MainImagePath") return null;
-                if (
-                  !col.accessorKey ||
-                  col.id === "actions" ||
-                  col.accessorKey === "MainImagePath"
-                )
-                  return null;
+                if (!col.accessorKey || col.id === "actions") return null;
                 return (
                   <div key={col.accessorKey}>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -581,15 +525,12 @@ const Overall = () => {
               <button
                 onClick={() => {
                   if (editRowIndex !== null) {
-                    // Edit mode
                     const updated = [...data];
                     updated[editRowIndex] = newRow;
                     setData(updated);
                   } else {
-                    // Add mode
                     setData((prev) => [newRow, ...prev]);
                   }
-
                   setShowModal(false);
                   setNewRow({});
                   setEditRowIndex(null);
