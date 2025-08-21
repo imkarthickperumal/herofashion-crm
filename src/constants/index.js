@@ -5,26 +5,26 @@ export const categories = ["All", "Website", "Music", "Gaming", "Node.js", "Reac
 export const sidebarLinks = [
   {
     links: [
-      {
-        // icon: "Home",
-        title: "Order Delivery",
-        url: "/",
-      },
-      {
-        // icon: "Trophy",
-        title: "Overall",
-        url: "/overall",
-      },
-      {
-        // icon: "TvMinimal",
-        title: "EMPwise",
-        url: "/empwise",
-      },
-      {
-        // icon: "History",
-        title: "TX Order",
-        url: "/tx_order",
-      },
+      // {
+      //   // icon: "Home",
+      //   title: "Order Delivery",
+      //   url: "/",
+      // },
+      // {
+      //   // icon: "Trophy",
+      //   title: "Overall",
+      //   url: "/overall",
+      // },
+      // {
+      //   // icon: "TvMinimal",
+      //   title: "EMPwise",
+      //   url: "/empwise",
+      // },
+      // {
+      //   // icon: "History",
+      //   title: "TX Order",
+      //   url: "/tx_order",
+      // },
       {
         // icon: "LocateFixed ",
         title: "Chennai",
@@ -34,6 +34,11 @@ export const sidebarLinks = [
         // icon: "LocateFixed ",
         title: "Server 11",
         url: "/server11",
+      },
+      {
+        // icon: "LocateFixed ",
+        title: "Server 13",
+        url: "/server13",
       },
      
      

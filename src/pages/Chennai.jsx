@@ -72,16 +72,15 @@ const Chennai = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
       {
         accessorKey: "MainImagePath",
         header: "Main Image",
-        cell: ({ getValue }) => {
-          const imgUrl = getValue() || "https://picsum.photos/200/300";
+        cell: ({ row }) => {
+          const imgUrl = row.original.MainImagePath;
           return (
             <img
               src={imgUrl}
               alt="Main"
               className="h-14 w-14 object-cover rounded border"
               onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "https://picsum.photos/200/300";
+                e.currentTarget.src = "https://picsum.photos/200/300";
               }}
             />
           );
@@ -105,38 +104,38 @@ const Chennai = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
         enableColumnFilter: true,
         filterFn: "text",
       },
-      {
-        accessorKey: "Yarn 20",
-        header: "Yarn 20",
-        enableColumnFilter: true,
-        filterFn: "text",
-      },
-      {
-        accessorKey: "Stitching 45",
-        header: "Stitching 45",
-        enableColumnFilter: true,
-        filterFn: "text",
-      },
+      // {
+      //   accessorKey: "Yarn 20",
+      //   header: "Yarn 20",
+      //   enableColumnFilter: true,
+      //   filterFn: "text",
+      // },
+      // {
+      //   accessorKey: "Stitching 45",
+      //   header: "Stitching 45",
+      //   enableColumnFilter: true,
+      //   filterFn: "text",
+      // },
 
-      {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => {
-          const rowData = row.original;
-          return (
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
-              onClick={() => {
-                setEditRowIndex(row.index);
-                setNewRow({ ...rowData });
-                setShowModal(true);
-              }}
-            >
-              ✏️ Edit
-            </button>
-          );
-        },
-      },
+      // {
+      //   id: "actions",
+      //   header: "Actions",
+      //   cell: ({ row }) => {
+      //     const rowData = row.original;
+      //     return (
+      //       <button
+      //         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
+      //         onClick={() => {
+      //           setEditRowIndex(row.index);
+      //           setNewRow({ ...rowData });
+      //           setShowModal(true);
+      //         }}
+      //       >
+      //         ✏️ Edit
+      //       </button>
+      //     );
+      //   },
+      // },
     ],
     []
   );
@@ -322,45 +321,6 @@ const Chennai = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
             <SkeletonTable columnCount={columns.length} rowCount={6} />
           ) : (
             <>
-              {/* <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
-                <div className="max-w-md w-full flex items-center justify-between">
-                  <Input
-                    value={globalFilter}
-                    onChange={(e) => setGlobalFilter(e.target.value)}
-                    placeholder="🔍 Search orders..."
-                    className="w-full rounded-lg border-gray-300 shadow-sm px-4 py-2 text-gray-800"
-                  />
-                  <span className="ml-2 text-sm text-gray-700 font-semibold whitespace-nowrap">
-                    Showing {table.getFilteredRowModel().rows.length} rows
-                  </span>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      setShowModal(true);
-                      setEditRowIndex(null);
-                      setNewRow({});
-                    }}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
-                  >
-                    ➕ Add New
-                  </button>
-                  <button
-                    onClick={handleExportExcel}
-                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm"
-                  >
-                    Export Excel
-                  </button>
-                  <button
-                    onClick={handleExportPDF}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded text-sm"
-                  >
-                    Export PDF
-                  </button>
-                </div>
-              </div> */}
-
               {/* 🧾 Table */}
               <div className="w-full overflow-x-auto rounded-lg border border-gray-200 transition-opacity duration-500">
                 <table className="min-w-[1000px] w-full text-sm text-gray-800">
@@ -417,18 +377,17 @@ const Chennai = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
                         className="transition-all duration-200 bg-white hover:bg-blue-50"
                       >
                         {row.getVisibleCells().map((cell) => {
-                          const cellValue = String(cell.getValue() ?? "");
+                          const colId = cell.column.id;
                           const isSelected =
                             selectedCell?.rowId === row.id &&
-                            selectedCell?.colId === cell.column.id;
+                            selectedCell?.colId === colId;
 
-                          // 🔑 Get this column's filter value if present
+                          // 🔑 Current filter value for highlighting
                           const columnFilterValue =
                             table
                               .getState()
-                              .columnFilters.find(
-                                (f) => f.id === cell.column.id
-                              )?.value || "";
+                              .columnFilters.find((f) => f.id === colId)
+                              ?.value || "";
 
                           return (
                             <td
@@ -441,14 +400,27 @@ const Chennai = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
                               onClick={() =>
                                 setSelectedCell({
                                   rowId: row.id,
-                                  colId: cell.column.id,
+                                  colId: colId,
                                 })
                               }
                             >
-                              {/* ✅ If column filter exists, highlight with it, otherwise fallback to global */}
-                              {highlightText(
-                                cellValue,
-                                columnFilterValue || globalFilter
+                              {colId === "MainImagePath" ? (
+                                // ✅ Show image for image column
+                                <img
+                                  src={cell.getValue()}
+                                  alt="Main"
+                                  className="h-14 w-14 object-cover rounded border"
+                                  onError={(e) => {
+                                    e.currentTarget.src =
+                                      "https://picsum.photos/200/300";
+                                  }}
+                                />
+                              ) : (
+                                // ✅ Show highlighted text for all other columns
+                                highlightText(
+                                  String(cell.getValue() ?? ""),
+                                  columnFilterValue || globalFilter
+                                )
                               )}
                             </td>
                           );

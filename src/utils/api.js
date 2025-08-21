@@ -33,3 +33,6 @@ export const getChennai = () =>
 
 export const getServer11 = () =>
   fetchWithTiming("http://103.125.155.133:7002/dhana/api/txorderdetstyle/");
+
+export const getServer13 = () =>
+  fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_details/");

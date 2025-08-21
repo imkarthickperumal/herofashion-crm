@@ -10,9 +10,9 @@ import {
   getFilteredRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { getServer11 } from "../utils/api";
+import { getServer13 } from "../utils/api";
 
-const Server11 = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
+const Server13 = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
   const [data, setData] = useState([]);
   const [setGlobalFilter] = useState("");
   const [columnFilters, setColumnFilters] = useState([]);
@@ -25,7 +25,7 @@ const Server11 = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
 
   const fetchData = async () => {
     try {
-      const result = await getServer11();
+      const result = await getServer13();
       console.log("API Data", result);
 
       if (Array.isArray(result) && result.length > 0) {
@@ -50,8 +50,8 @@ const Server11 = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "no",
-        header: "No",
+        accessorKey: "orderno",
+        header: "Order No",
         enableColumnFilter: true,
         filterFn: "text",
       },
@@ -63,8 +63,8 @@ const Server11 = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
         filterFn: "text",
       },
       {
-        accessorKey: "orderno",
-        header: "Order No",
+        accessorKey: "no",
+        header: "No",
         enableColumnFilter: true,
         filterFn: "text",
       },
@@ -76,61 +76,67 @@ const Server11 = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
         filterFn: "text",
       },
       {
-        accessorKey: "styleno",
-        header: "Style No",
-        enableColumnFilter: true,
-        filterFn: "text",
-      },
-      {
         accessorKey: "itemno",
         header: "Item No",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "fabricid",
-        header: "Fabric ID",
+        accessorKey: "date",
+        header: "Date",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "construction",
-        header: "Construction",
+        accessorKey: "ordertype",
+        header: "ordertype",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "gsm",
-        header: "gsm",
+        accessorKey: "customerid",
+        header: "customerid",
         enableColumnFilter: true,
         filterFn: "text",
       },
       {
-        accessorKey: "yarnid",
-        header: "yarnid",
+        accessorKey: "departmentid",
+        header: "departmentid",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "pono",
+        header: "pono",
+        enableColumnFilter: true,
+        filterFn: "text",
+      },
+      {
+        accessorKey: "styleid",
+        header: "styleid",
         enableColumnFilter: true,
         filterFn: "text",
       },
 
-      // {
-      //   id: "actions",
-      //   header: "Actions",
-      //   cell: ({ row }) => {
-      //     const rowData = row.original;
-      //     return (
-      //       <button
-      //         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
-      //         onClick={() => {
-      //           setEditRowIndex(row.index);
-      //           setNewRow({ ...rowData });
-      //           setShowModal(true);
-      //         }}
-      //       >
-      //         ✏️ Edit
-      //       </button>
-      //     );
+      //   {
+      //     id: "actions",
+      //     header: "Actions",
+      //     cell: ({ row }) => {
+      //       const rowData = row.original;
+      //       return (
+      //         <button
+      //           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
+      //           onClick={() => {
+      //             setEditRowIndex(row.index);
+      //             setNewRow({ ...rowData });
+      //             setShowModal(true);
+      //           }}
+      //         >
+      //           ✏️ Edit
+      //         </button>
+      //       );
+      //     },
       //   },
-      // },
     ],
     []
   );
@@ -551,7 +557,7 @@ const Server11 = ({ globalFilter, onAddNew, onExportExcel, onExportPDF }) => {
   );
 };
 
-export default Server11;
+export default Server13;
 
 const SkeletonTable = ({ columnCount = 10, rowCount = 5 }) => {
   return (

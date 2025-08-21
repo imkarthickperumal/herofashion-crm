@@ -10,6 +10,7 @@ import Overall from "./pages/Overall";
 import TXorder from "./pages/TXorder";
 import Chennai from "./pages/Chennai";
 import Server11 from "./pages/Server11";
+import Server13 from "./pages/Server13";
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -117,6 +118,17 @@ export default function App() {
                 path="/server11"
                 element={
                   <Server11
+                    globalFilter={globalFilter}
+                    onAddNew={setAddNewFn}
+                    onExportExcel={setExportExcelFn}
+                    onExportPDF={setExportPDFFn}
+                  />
+                }
+              />
+              <Route
+                path="/server13"
+                element={
+                  <Server13
                     globalFilter={globalFilter}
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}
