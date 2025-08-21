@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import EMPWise from "./pages/EMPWise";
 import Overall from "./pages/Overall";
 import TXorder from "./pages/TXorder";
+import Chennai from "./pages/Chennai";
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -93,6 +94,17 @@ export default function App() {
                 path="/tx_order"
                 element={
                   <TXorder
+                    globalFilter={globalFilter}
+                    onAddNew={setAddNewFn}
+                    onExportExcel={setExportExcelFn}
+                    onExportPDF={setExportPDFFn}
+                  />
+                }
+              />
+              <Route
+                path="/chennai"
+                element={
+                  <Chennai
                     globalFilter={globalFilter}
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}

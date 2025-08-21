@@ -27,3 +27,6 @@ export const getEmpwise = () =>
 
 export const getTXOrder = () =>
   fetchWithTiming("https://dev.admin.herofashion.in/dhana/api/tx_order/");
+
+export const getChennai = () =>
+  fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_delivery/");

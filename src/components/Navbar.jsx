@@ -25,6 +25,7 @@ const Navbar = ({
     "/overall": "Overall Orders",
     "/empwise": "EMPWise Orders",
     "/tx_order": "TX Orders",
+    "/chennai": "Chennai",
   };
 
   const currentTitle = pageTitles[location.pathname] || "Orders";
