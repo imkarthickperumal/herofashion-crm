@@ -30,6 +30,11 @@ export const sidebarLinks = [
         title: "Chennai",
         url: "/chennai",
       },
+      {
+        // icon: "LocateFixed ",
+        title: "Server 11",
+        url: "/server11",
+      },
      
      
     ],
