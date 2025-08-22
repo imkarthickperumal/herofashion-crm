@@ -59,6 +59,7 @@ export default function App() {
           onAddNew={() => addNewFn && addNewFn()}
           onExportExcel={() => exportExcelFn && exportExcelFn()}
           onExportPDF={() => exportPDFFn && exportPDFFn()}
+          setUser={setUser}
         />
 
         <div className="flex overflow-auto">

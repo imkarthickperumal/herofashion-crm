@@ -27,6 +27,18 @@ export const loginUser = async (credentials) => {
   }
 };
 
+// ✅ Logout API
+export const logoutUser = async () => {
+  try {
+    const res = await axios.post(
+      "http://103.125.155.133:7002/dhana/api/logout/"
+    );
+    return res.data;
+  } catch (err) {
+    throw err.response?.data || { message: "Logout failed" };
+  }
+};
+
 // ✅ APIs
 export const getOrderDelivery = () =>
   fetchWithTiming("https://dev.admin.herofashion.in/dhana/api/order_delivery/");
