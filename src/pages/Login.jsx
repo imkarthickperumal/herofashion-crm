@@ -10,12 +10,13 @@ export default function Login({ onLogin }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ✅ Validate input before sending request
   const validate = () => {
-    if (!formData.username) {
+    if (!formData.username.trim()) {
       toast.error("Username is required");
       return false;
     }
-    if (!formData.password) {
+    if (!formData.password.trim()) {
       toast.error("Password is required");
       return false;
     }
@@ -24,17 +25,23 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate()) return; // stop if validation fails
 
     try {
       setLoading(true);
       const data = await loginUser(formData);
 
+      // ✅ Save user and login success
       localStorage.setItem("user", JSON.stringify(data));
       toast.success("Login successful!");
       onLogin(data);
     } catch (err) {
-      toast.error(err.message || "Invalid credentials");
+      // ✅ Show backend error message OR default
+      let errorMessage = "Invalid credentials";
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      toast.error(errorMessage); // you can also use toast.warning if you prefer
     } finally {
       setLoading(false);
     }
