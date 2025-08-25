@@ -86,7 +86,7 @@ export default function App() {
           >
             <Routes>
               <Route
-                path="/"
+                path="/home"
                 element={
                   <Home
                     globalFilter={globalFilter}
@@ -122,6 +122,17 @@ export default function App() {
                 path="/tx_order"
                 element={
                   <TXorder
+                    globalFilter={globalFilter}
+                    onAddNew={setAddNewFn}
+                    onExportExcel={setExportExcelFn}
+                    onExportPDF={setExportPDFFn}
+                  />
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <Chennai
                     globalFilter={globalFilter}
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}
