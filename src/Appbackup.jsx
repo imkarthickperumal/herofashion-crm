@@ -8,6 +8,7 @@ import {
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { Toaster } from "react-hot-toast";
+import Login from "./pages/Login";
 
 // Import pages
 import Home from "./pages/Home";
@@ -17,11 +18,11 @@ import TXorder from "./pages/TXorder";
 import Chennai from "./pages/Chennai";
 import Server11 from "./pages/Server11";
 import Server13 from "./pages/Server13";
-import Demo from "./pages/Demo";
 
-export default function App() {
+export default function Appbackup() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [user, setUser] = useState(null); // ✅ track login user
 
   // Navbar actions
   const [addNewFn, setAddNewFn] = useState(null);
@@ -30,9 +31,22 @@ export default function App() {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
+  // Keep user logged in if data exists in localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   useEffect(() => {
     if (window.innerWidth >= 768) setIsSidebarOpen(true);
   }, []);
+
+  if (!user) {
+    // ✅ show login page only if user is not authenticated
+    return <Login onLogin={setUser} />;
+  }
 
   return (
     <Router>
@@ -45,6 +59,7 @@ export default function App() {
           onAddNew={() => addNewFn && addNewFn()}
           onExportExcel={() => exportExcelFn && exportExcelFn()}
           onExportPDF={() => exportPDFFn && exportPDFFn()}
+          setUser={setUser}
         />
 
         <div className="flex overflow-auto">
@@ -151,17 +166,6 @@ export default function App() {
                 path="/server13"
                 element={
                   <Server13
-                    globalFilter={globalFilter}
-                    onAddNew={setAddNewFn}
-                    onExportExcel={setExportExcelFn}
-                    onExportPDF={setExportPDFFn}
-                  />
-                }
-              />
-              <Route
-                path="/demo"
-                element={
-                  <Demo
                     globalFilter={globalFilter}
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}

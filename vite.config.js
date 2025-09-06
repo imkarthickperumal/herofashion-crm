@@ -21,7 +21,7 @@ export default defineConfig({
         scope: "/",
         display: "standalone",
         background_color: "#ffffff",
-        theme_color: "#7cb547", // ✅ match brand
+        theme_color: "#7cb547",
         icons: [
           {
             src: "/icons/android-chrome-192x192.png",
@@ -46,5 +46,25 @@ export default defineConfig({
       },
     }),
   ],
-  
+
+  // ✅ Proxy config for CORS fix
+  server: {
+    proxy: {
+      "/dhana": {
+        target: "https://roll.herofashion.com:883",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/overall": {
+        target: "http://103.125.155.133:7005",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/empwise": {
+        target: "http://103.125.155.133:7005",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });

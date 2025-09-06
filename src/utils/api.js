@@ -11,61 +11,48 @@ const fetchWithTiming = async (url) => {
   } catch (err) {
     const endTime = performance.now();
     console.error(`❌ ${url} failed after ${(endTime - startTime).toFixed(2)} ms`);
-    throw err;
+    throw err.response?.data || { message: "API call failed" };
   }
 };
 
+// ✅ Auth APIs
 export const loginUser = async (credentials) => {
   try {
-    const res = await axios.post(
-      "http://103.125.155.133:7002/dhana/api/login/",
-      credentials
-    );
+    // 🔹 use relative URL so proxy works in dev
+    const res = await axios.post("/dhana/api/login/", credentials);
     return res.data;
   } catch (err) {
     throw err.response?.data || { message: "Login failed" };
   }
 };
 
-// ✅ Logout API
 export const logoutUser = async () => {
   try {
-    const res = await axios.post(
-      "http://103.125.155.133:7002/dhana/api/logout/"
-    );
+    const res = await axios.post("/dhana/api/logout/");
     return res.data;
   } catch (err) {
     throw err.response?.data || { message: "Logout failed" };
   }
 };
 
-// ✅ APIs
+// ✅ APIs (delivery & reports)
+// 🔹 In dev → goes via Vite proxy
+// 🔹 In prod → directly hits server
 export const getOrderDelivery = () =>
-  fetchWithTiming("https://dev.admin.herofashion.in/dhana/api/order_delivery/");
+  fetchWithTiming("/dhana/api/order_delivery/");
 
-export const getOverall = () =>
-  fetchWithTiming("http://103.125.155.133:7005/overall");
+export const getOverall = () => fetchWithTiming("/overall");
 
-export const getEmpwise = () =>
-  fetchWithTiming("http://103.125.155.133:7005/empwise/");
+export const getEmpwise = () => fetchWithTiming("/empwise/");
 
-export const getTXOrder = () =>
-  fetchWithTiming("https://dev.admin.herofashion.in/dhana/api/tx_order/");
+export const getTXOrder = () => fetchWithTiming("/dhana/api/tx_order/");
 
-// export const getChennai = () =>
-//   fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_delivery/");
-
-// export const getServer11 = () =>
-//   fetchWithTiming("http://103.125.155.133:7002/dhana/api/txorderdetstyle/");
-
-// export const getServer13 = () =>
-//   fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_details/");
-
+// Legacy direct server calls (keep as backup if you want to bypass proxy)
 export const getChennai = () =>
-  fetchWithTiming("https://roll.herofashion.com:883/dhana/api/order_delivery/");
+  fetchWithTiming("/dhana/api/order_delivery/");
 
 export const getServer11 = () =>
-  fetchWithTiming("https://roll.herofashion.com:883/dhana/api/txorderdetstyle/");
+  fetchWithTiming("/dhana/api/txorderdetstyle/");
 
 export const getServer13 = () =>
-  fetchWithTiming("https://roll.herofashion.com:883/dhana/api/order_details/");
+  fetchWithTiming("/dhana/api/order_details/");
