@@ -42,12 +42,11 @@ export default defineConfig({
         ],
       },
       devOptions: {
-        enabled: true, // ✅ allows testing on localhost
+        enabled: true,
       },
     }),
   ],
 
-  // ✅ Proxy config for CORS fix
   server: {
     proxy: {
       "/dhana": {
