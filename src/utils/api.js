@@ -52,11 +52,20 @@ export const getEmpwise = () =>
 export const getTXOrder = () =>
   fetchWithTiming("https://dev.admin.herofashion.in/dhana/api/tx_order/");
 
+// export const getChennai = () =>
+//   fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_delivery/");
+
+// export const getServer11 = () =>
+//   fetchWithTiming("http://103.125.155.133:7002/dhana/api/txorderdetstyle/");
+
+// export const getServer13 = () =>
+//   fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_details/");
+
 export const getChennai = () =>
-  fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_delivery/");
+  fetchWithTiming("https://roll.herofashion.com:883/dhana/api/order_delivery/");
 
 export const getServer11 = () =>
-  fetchWithTiming("http://103.125.155.133:7002/dhana/api/txorderdetstyle/");
+  fetchWithTiming("https://roll.herofashion.com:883/dhana/api/txorderdetstyle/");
 
 export const getServer13 = () =>
-  fetchWithTiming("http://103.125.155.133:7002/dhana/api/order_details/");
+  fetchWithTiming("https://roll.herofashion.com:883/dhana/api/order_details/");
