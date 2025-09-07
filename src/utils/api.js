@@ -18,7 +18,7 @@ const fetchWithTiming = async (url) => {
 export const loginUser = async (credentials) => {
   try {
     const res = await axios.post(
-      "http://103.125.155.133:7002/dhana/api/login/",
+      "https://dev.admin.herofashion.in//dhana/api/login/",
       credentials
     );
     return res.data;
