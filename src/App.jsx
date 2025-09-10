@@ -18,6 +18,7 @@ import TXorder from "./pages/TXorder";
 import Chennai from "./pages/Chennai";
 import Server11 from "./pages/Server11";
 import Server13 from "./pages/Server13";
+import OrdersPage from "./pages/Orderspage";
 
 export default function Appbackup() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -166,6 +167,17 @@ export default function Appbackup() {
                 path="/server13"
                 element={
                   <Server13
+                    globalFilter={globalFilter}
+                    onAddNew={setAddNewFn}
+                    onExportExcel={setExportExcelFn}
+                    onExportPDF={setExportPDFFn}
+                  />
+                }
+              />
+              <Route
+                path="/order"
+                element={
+                  <OrdersPage
                     globalFilter={globalFilter}
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}

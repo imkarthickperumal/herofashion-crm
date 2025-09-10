@@ -40,6 +40,11 @@ export const sidebarLinks = [
         title: "Server 13",
         url: "/server13",
       },
+      {
+        // icon: "LocateFixed ",
+        title: "Order Hand",
+        url: "/order",
+      },
       // {
       //   // icon: "LocateFixed ",
       //   title: "Demo",
