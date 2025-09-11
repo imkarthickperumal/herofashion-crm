@@ -71,3 +71,5 @@ export const getServer13 = () =>
   fetchWithTiming("https://roll.herofashion.com:883/dhana/api/order_details/");
 export const getOrder = () =>
   fetchWithTiming("https://herofashion.onrender.com/api/ordersinhand");
+export const balaOrder = () =>
+  fetchWithTiming("https://app.herofashion.com/bala/Order/");

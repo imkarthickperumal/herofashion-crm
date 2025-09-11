@@ -45,6 +45,11 @@ export const sidebarLinks = [
         title: "Order Hand",
         url: "/order",
       },
+      {
+        // icon: "LocateFixed ",
+        title: "Bala Order",
+        url: "/balaorder",
+      },
       // {
       //   // icon: "LocateFixed ",
       //   title: "Demo",
