@@ -55,12 +55,28 @@ export const getTXOrder = () =>
 export const getChennai = () =>
   fetchWithTiming("https://dev.admin.herofashion.in/dhana/api/order_delivery/");
 
-export const getServer11 = () =>
-  fetchWithTiming("https://app.herofashion.com/dhana/api/txorderdetstyle/");
+// export const getServer11 = () =>
+//   fetchWithTiming("https://app.herofashion.com/dhana/api/txorderdetstyle/");
 
-export const getServer13 = () =>
-  fetchWithTiming("https://app.herofashion.com/dhana/api/order_details/");
-export const getOrder = () =>
-  fetchWithTiming("https://herofashion.onrender.com/api/ordersinhand");
-export const balaOrder = () =>
-  fetchWithTiming("https://app.herofashion.com/bala/Order/");
+// export const getServer13 = () =>
+//   fetchWithTiming("https://app.herofashion.com/dhana/api/order_details/");
+
+
+
+export const getServer11 = async () => {
+  const res = await fetchWithTiming("https://app.herofashion.com/dhana/api/txorderdetstyle/");
+  console.log("✅ API DATA:", res);
+  return res; // already JSON
+};
+
+
+export const getServer13 = async () => {
+  const res = await fetchWithTiming("https://app.herofashion.com/dhana/api/order_details/");
+  console.log("✅ API DATA:", res);
+  return res; // already JSON
+};
+
+
+
+
+

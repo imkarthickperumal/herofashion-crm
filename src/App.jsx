@@ -11,17 +11,12 @@ import { Toaster } from "react-hot-toast";
 import Login from "./pages/Login";
 
 // Import pages
+
 import Home from "./pages/Home";
-import EMPWise from "./pages/EMPWise";
-import Overall from "./pages/Overall";
-import TXorder from "./pages/TXorder";
-import Chennai from "./pages/Chennai";
 import Server11 from "./pages/Server11";
 import Server13 from "./pages/Server13";
-import OrdersPage from "./pages/Orderspage";
-import BalaOrders from "./pages/BalaOrder";
 
-export default function Appbackup() {
+export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState("");
   const [user, setUser] = useState(null); // ✅ track login user
@@ -95,64 +90,11 @@ export default function Appbackup() {
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}
                     onExportPDF={setExportPDFFn}
+                    pageTitle="Home Orders"
                   />
                 }
               />
-              <Route
-                path="/overall"
-                element={
-                  <Overall
-                    globalFilter={globalFilter}
-                    onAddNew={setAddNewFn}
-                    onExportExcel={setExportExcelFn}
-                    onExportPDF={setExportPDFFn}
-                  />
-                }
-              />
-              <Route
-                path="/empwise"
-                element={
-                  <EMPWise
-                    globalFilter={globalFilter}
-                    onAddNew={setAddNewFn}
-                    onExportExcel={setExportExcelFn}
-                    onExportPDF={setExportPDFFn}
-                  />
-                }
-              />
-              <Route
-                path="/tx_order"
-                element={
-                  <TXorder
-                    globalFilter={globalFilter}
-                    onAddNew={setAddNewFn}
-                    onExportExcel={setExportExcelFn}
-                    onExportPDF={setExportPDFFn}
-                  />
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <Chennai
-                    globalFilter={globalFilter}
-                    onAddNew={setAddNewFn}
-                    onExportExcel={setExportExcelFn}
-                    onExportPDF={setExportPDFFn}
-                  />
-                }
-              />
-              <Route
-                path="/chennai"
-                element={
-                  <Chennai
-                    globalFilter={globalFilter}
-                    onAddNew={setAddNewFn}
-                    onExportExcel={setExportExcelFn}
-                    onExportPDF={setExportPDFFn}
-                  />
-                }
-              />
+
               <Route
                 path="/server11"
                 element={
@@ -161,6 +103,7 @@ export default function Appbackup() {
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}
                     onExportPDF={setExportPDFFn}
+                    pageTitle="Server 11"
                   />
                 }
               />
@@ -172,28 +115,7 @@ export default function Appbackup() {
                     onAddNew={setAddNewFn}
                     onExportExcel={setExportExcelFn}
                     onExportPDF={setExportPDFFn}
-                  />
-                }
-              />
-              <Route
-                path="/order"
-                element={
-                  <OrdersPage
-                    globalFilter={globalFilter}
-                    onAddNew={setAddNewFn}
-                    onExportExcel={setExportExcelFn}
-                    onExportPDF={setExportPDFFn}
-                  />
-                }
-              />
-              <Route
-                path="/balaorder"
-                element={
-                  <BalaOrders
-                    globalFilter={globalFilter}
-                    onAddNew={setAddNewFn}
-                    onExportExcel={setExportExcelFn}
-                    onExportPDF={setExportPDFFn}
+                    pageTitle="Server 13"
                   />
                 }
               />
