@@ -97,7 +97,7 @@ const Navbar = ({
             </button>
           </div>
 
-          <div className="relative mt-2 sm:mt-0 mb-4" ref={serverRef}>
+          {/* <div className="relative mt-2 sm:mt-0 mb-4" ref={serverRef}>
             <button
               onClick={() => setIsServerMenuOpen(!isServerMenuOpen)}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm w-full sm:w-auto"
@@ -110,6 +110,37 @@ const Navbar = ({
                   Production 11
                 </button>
                 <button className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:hover:bg-neutral-700">
+                  Test 13
+                </button>
+              </div>
+            )}
+          </div> */}
+
+          <div className="relative mt-2 sm:mt-0 mb-4" ref={serverRef}>
+            <button
+              onClick={() => setIsServerMenuOpen(!isServerMenuOpen)}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm w-full sm:w-auto"
+            >
+              Servers ▾
+            </button>
+            {isServerMenuOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-neutral-800 shadow-lg rounded-lg overflow-hidden z-50">
+                <button
+                  onClick={() => {
+                    navigate("/server11");
+                    setIsServerMenuOpen(false);
+                  }}
+                  className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:hover:bg-neutral-700"
+                >
+                  Production 11
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/server13");
+                    setIsServerMenuOpen(false);
+                  }}
+                  className="block px-4 py-2 text-sm w-full text-left hover:bg-gray-100 dark:hover:bg-neutral-700"
+                >
                   Test 13
                 </button>
               </div>
