@@ -1,4 +1,3 @@
-// Navbar.jsx
 import { Menu, User } from "lucide-react";
 import Logo from "../assets/logo.png";
 import { useEffect, useState, useRef } from "react";
@@ -62,7 +61,7 @@ const Navbar = ({
   return (
     <header className="sticky top-0 z-10 bg-white dark:bg-neutral-900 shadow-sm">
       <nav className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 px-4 gap-3">
-        {/* -------- Left Section -------- */}
+        {/* Left */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-1/3">
           <HeaderLeftSection
             toggleSidebar={toggleSidebar}
@@ -73,10 +72,8 @@ const Navbar = ({
           />
         </div>
 
-        {/* -------- Right Section -------- */}
+        {/* Right */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
-          {/* ✅ Global Search (full width on mobile, fixed width on desktop) */}
-
           <div className="w-full sm:w-64">
             <GlobalSearch
               searchTerm={globalFilter}
@@ -84,7 +81,7 @@ const Navbar = ({
               placeholder="Search orders..."
             />
           </div>
-          {/* Export buttons */}
+
           <div className="flex gap-2 w-full sm:w-auto justify-between sm:justify-start mb-4">
             <button
               onClick={onExportExcel}
@@ -99,7 +96,7 @@ const Navbar = ({
               Export PDF
             </button>
           </div>
-          {/* Server dropdown */}
+
           <div className="relative mt-2 sm:mt-0 mb-4" ref={serverRef}>
             <button
               onClick={() => setIsServerMenuOpen(!isServerMenuOpen)}
@@ -118,7 +115,7 @@ const Navbar = ({
               </div>
             )}
           </div>
-          {/* Desktop profile dropdown */}
+
           <div className="hidden sm:block mb-4">
             <ProfileDropdown
               isProfileMenuOpen={isProfileMenuOpen}
@@ -133,7 +130,6 @@ const Navbar = ({
   );
 };
 
-// -------- Left Header Section --------
 export const HeaderLeftSection = ({
   toggleSidebar,
   isProfileMenuOpen,
@@ -157,7 +153,6 @@ export const HeaderLeftSection = ({
       </a>
     </div>
 
-    {/* Mobile profile */}
     <div className="sm:hidden relative" ref={profileRef}>
       <button
         onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
@@ -183,7 +178,6 @@ export const HeaderLeftSection = ({
   </div>
 );
 
-// -------- Desktop Profile Dropdown --------
 const ProfileDropdown = ({
   isProfileMenuOpen,
   setIsProfileMenuOpen,
