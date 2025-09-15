@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
@@ -29,58 +28,71 @@ export default function App() {
 
   if (!user) return <Login onLogin={setUser} />;
 
+  // ✅ Handlers
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+  const handleExportExcel = () => exportExcelFn();
+  const handleExportPDF = () => exportPDFFn();
+
   return (
     <Router>
       <div className="flex flex-col h-screen">
         <Navbar
-          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          toggleSidebar={toggleSidebar}
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
-          onExportExcel={() => exportExcelFn()}
-          onExportPDF={() => exportPDFFn()}
-          setUser={setUser}
+          onExportExcel={handleExportExcel}
+          onExportPDF={handleExportPDF}
+          user={user} // ✅ pass correct user
+          setUser={setUser} // ✅ pass correct setter
         />
 
         <div className="flex flex-1">
           <Sidebar
-            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            toggleSidebar={toggleSidebar}
             isSidebarOpen={isSidebarOpen}
+            user={user}
           />
           <div className="flex-1 overflow-auto p-4">
             <Routes>
-              <Route
-                path="/home"
-                element={
-                  <Home
-                    globalFilter={globalFilter}
-                    setExportExcel={setExportExcelFn}
-                    setExportPDF={setExportPDFFn}
-                    pageTitle="Home Orders"
+              {/* Only API users can access these */}
+              {!user.isDummy && (
+                <>
+                  <Route
+                    path="/home"
+                    element={
+                      <Home
+                        globalFilter={globalFilter}
+                        setExportExcel={setExportExcelFn}
+                        setExportPDF={setExportPDFFn}
+                        pageTitle="Home Orders"
+                      />
+                    }
                   />
-                }
-              />
-              <Route
-                path="/server11"
-                element={
-                  <Server11
-                    globalFilter={globalFilter}
-                    setExportExcel={setExportExcelFn}
-                    setExportPDF={setExportPDFFn}
-                    pageTitle="Server 11"
+                  <Route
+                    path="/server11"
+                    element={
+                      <Server11
+                        globalFilter={globalFilter}
+                        setExportExcel={setExportExcelFn}
+                        setExportPDF={setExportPDFFn}
+                        pageTitle="Server 11"
+                      />
+                    }
                   />
-                }
-              />
-              <Route
-                path="/server13"
-                element={
-                  <Server13
-                    globalFilter={globalFilter}
-                    setExportExcel={setExportExcelFn}
-                    setExportPDF={setExportPDFFn}
-                    pageTitle="Server 13"
+                  <Route
+                    path="/server13"
+                    element={
+                      <Server13
+                        globalFilter={globalFilter}
+                        setExportExcel={setExportExcelFn}
+                        setExportPDF={setExportPDFFn}
+                        pageTitle="Server 13"
+                      />
+                    }
                   />
-                }
-              />
+                </>
+              )}
+              {/* Orders is always accessible */}
               <Route
                 path="/orders"
                 element={
@@ -88,11 +100,14 @@ export default function App() {
                     globalFilter={globalFilter}
                     setExportExcel={setExportExcelFn}
                     setExportPDF={setExportPDFFn}
-                    pageTitle="Server 13"
+                    pageTitle="Orders"
                   />
                 }
               />
-              <Route path="*" element={<Navigate to="/home" />} />
+              <Route
+                path="*"
+                element={<Navigate to={user.isDummy ? "/orders" : "/home"} />}
+              />
             </Routes>
             <Toaster />
           </div>

@@ -114,7 +114,7 @@ const DynamicAgGrid = forwardRef(({ rowData, searchTerm = "" }, ref) => {
   }, []);
 
   /** PDF Export */
-  const exportPDF = useCallback(() => {
+  const exportPDFOld = useCallback(() => {
     if (!gridApiRef.current || !columnApiRef.current) return;
 
     const doc = new jsPDF();
@@ -144,6 +144,49 @@ const DynamicAgGrid = forwardRef(({ rowData, searchTerm = "" }, ref) => {
       startY: 20,
       styles: { fontSize: 8 },
     });
+    doc.save("Export.pdf");
+  }, []);
+
+  /** PDF Export */
+  const exportPDF = useCallback(() => {
+    if (!gridApiRef.current || !columnApiRef.current) return;
+
+    const doc = new jsPDF();
+
+    // ✅ collect visible columns
+    const columns = columnApiRef.current
+      .getAllDisplayedColumns()
+      .map((col) => ({
+        header: col.getColDef().headerName || col.getColId(),
+        dataKey: col.getColId(),
+      }));
+
+    // ✅ collect row data
+    const rows = [];
+    gridApiRef.current.forEachNode((node) => {
+      const row = {};
+      columns.forEach((col) => {
+        let val = node.data[col.dataKey];
+        row[col.dataKey] = val != null ? String(val) : "";
+      });
+      rows.push(row);
+    });
+
+    if (!rows.length) return;
+
+    // ✅ add a title
+    doc.setFontSize(14);
+    doc.text("AG Grid Export", 14, 15);
+
+    // ✅ autoTable needs array of objects
+    doc.autoTable({
+      head: [columns.map((c) => c.header)],
+      body: rows.map((r) => columns.map((c) => r[c.dataKey])),
+      startY: 25,
+      styles: { fontSize: 8, cellPadding: 2 },
+    });
+
+    // ✅ force download
     doc.save("Export.pdf");
   }, []);
 
