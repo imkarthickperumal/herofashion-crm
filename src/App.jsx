@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Server11 from "./pages/Server11";
 import Server13 from "./pages/Server13";
+import Order from "./pages/Order";
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -73,6 +74,17 @@ export default function App() {
                 path="/server13"
                 element={
                   <Server13
+                    globalFilter={globalFilter}
+                    setExportExcel={setExportExcelFn}
+                    setExportPDF={setExportPDFFn}
+                    pageTitle="Server 13"
+                  />
+                }
+              />
+              <Route
+                path="/orders"
+                element={
+                  <Order
                     globalFilter={globalFilter}
                     setExportExcel={setExportExcelFn}
                     setExportPDF={setExportPDFFn}

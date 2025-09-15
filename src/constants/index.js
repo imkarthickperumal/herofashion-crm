@@ -19,6 +19,10 @@ export const sidebarLinks = [
         title: "Demo 13",
         url: "/server13",
       },
+      {
+        title: "Orders",
+        url: "/orders",
+      },
 
      
      

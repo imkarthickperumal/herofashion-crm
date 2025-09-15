@@ -75,6 +75,11 @@ export const getServer13 = async () => {
   console.log("✅ API DATA:", res);
   return res; // already JSON
 };
+export const getOrder = async () => {
+  const res = await fetchWithTiming("https://app.herofashion.com/bala/Order/");
+  console.log("✅ API DATA:", res);
+  return res; // already JSON
+};
 
 
 
