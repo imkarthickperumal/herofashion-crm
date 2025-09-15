@@ -33,9 +33,16 @@ const Server13 = ({
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
-        {pageTitle}
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-1xl font-semibold text-gray-800 dark:text-gray-200">
+          {pageTitle}
+        </h2>
+
+        {/* ✅ Total Data Count */}
+        <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg shadow text-sm font-medium">
+          Total Records: <span className="font-bold">{filtered.length}</span>
+        </div>
+      </div>
       <DynamicAgGrid
         ref={gridRef}
         rowData={filtered}

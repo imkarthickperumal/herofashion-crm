@@ -175,7 +175,7 @@ const DynamicAgGrid = forwardRef(({ rowData, searchTerm = "" }, ref) => {
   );
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-0 w-full">
       <div className="ag-theme-alpine w-full" theme="legacy">
         <AgGridReact
           ref={gridRef}
