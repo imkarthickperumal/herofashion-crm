@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "karthick",
+      "password": "kartihck",
+      "role": "User",
+      "permissions": [
+        "/server11"
+      ]
+    },
+    {
+      "id": "ff7e",
+      "username": "bala",
+      "password": "bala",
+      "role": "User",
+      "permissions": [
+        "/server11",
+        "/server13"
+      ]
+    },
+    {
+      "id": "9d13",
+      "username": "dhana",
+      "password": "dhana",
+      "role": "User",
+      "permissions": [
+        "/attendancereport",
+        "/rollchecking"
+      ]
+    }
+  ]
+}

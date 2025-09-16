@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import DynamicAgGrid from "../components/DynamicAgGrid";
 import { getOrder } from "../utils/api";
 
-const Order = ({ pageTitle, globalFilter, setExportExcel, setExportPDF }) => {
+const Order = ({ pageTitle, globalFilter, setExportExcel }) => {
   const [orders, setOrders] = useState([]);
   const gridRef = useRef(null);
 
@@ -17,8 +17,7 @@ const Order = ({ pageTitle, globalFilter, setExportExcel, setExportPDF }) => {
 
   useEffect(() => {
     setExportExcel(() => () => gridRef.current.exportExcel());
-    setExportPDF(() => () => gridRef.current.exportPDF());
-  }, [setExportExcel, setExportPDF]);
+  }, [setExportExcel]);
 
   const filtered = orders.filter((o) =>
     Object.values(o).some((v) =>
