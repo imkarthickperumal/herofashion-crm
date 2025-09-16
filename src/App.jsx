@@ -13,6 +13,7 @@ import Home from "./pages/Home";
 import Server11 from "./pages/Server11";
 import Server13 from "./pages/Server13";
 import Order from "./pages/Order";
+import Rollchecking from "./pages/Rollchecking";
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -101,6 +102,17 @@ export default function App() {
                     setExportExcel={setExportExcelFn}
                     setExportPDF={setExportPDFFn}
                     pageTitle="Orders"
+                  />
+                }
+              />
+              <Route
+                path="/rollchecking"
+                element={
+                  <Rollchecking
+                    globalFilter={globalFilter}
+                    setExportExcel={setExportExcelFn}
+                    setExportPDF={setExportPDFFn}
+                    pageTitle="Roll checking"
                   />
                 }
               />

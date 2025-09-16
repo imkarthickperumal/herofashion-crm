@@ -23,6 +23,10 @@ export const sidebarLinks = [
         title: "Orders",
         url: "/orders",
       },
+      {
+        title: "Roll Checking",
+        url: "/rollchecking",
+      },
 
      
      
