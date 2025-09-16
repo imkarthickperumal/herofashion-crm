@@ -32,7 +32,7 @@ const Server13 = ({
   );
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-1xl font-semibold text-gray-800 dark:text-gray-200">
           {pageTitle}

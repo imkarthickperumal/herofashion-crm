@@ -114,7 +114,7 @@ const DynamicAgGrid = forwardRef(({ rowData, searchTerm = "" }, ref) => {
   }, []);
 
   /** PDF Export */
-  const exportPDFOld = useCallback(() => {
+  const exportPDF = useCallback(() => {
     if (!gridApiRef.current || !columnApiRef.current) return;
 
     const doc = new jsPDF();
@@ -144,49 +144,6 @@ const DynamicAgGrid = forwardRef(({ rowData, searchTerm = "" }, ref) => {
       startY: 20,
       styles: { fontSize: 8 },
     });
-    doc.save("Export.pdf");
-  }, []);
-
-  /** PDF Export */
-  const exportPDF = useCallback(() => {
-    if (!gridApiRef.current || !columnApiRef.current) return;
-
-    const doc = new jsPDF();
-
-    // ✅ collect visible columns
-    const columns = columnApiRef.current
-      .getAllDisplayedColumns()
-      .map((col) => ({
-        header: col.getColDef().headerName || col.getColId(),
-        dataKey: col.getColId(),
-      }));
-
-    // ✅ collect row data
-    const rows = [];
-    gridApiRef.current.forEachNode((node) => {
-      const row = {};
-      columns.forEach((col) => {
-        let val = node.data[col.dataKey];
-        row[col.dataKey] = val != null ? String(val) : "";
-      });
-      rows.push(row);
-    });
-
-    if (!rows.length) return;
-
-    // ✅ add a title
-    doc.setFontSize(14);
-    doc.text("AG Grid Export", 14, 15);
-
-    // ✅ autoTable needs array of objects
-    doc.autoTable({
-      head: [columns.map((c) => c.header)],
-      body: rows.map((r) => columns.map((c) => r[c.dataKey])),
-      startY: 25,
-      styles: { fontSize: 8, cellPadding: 2 },
-    });
-
-    // ✅ force download
     doc.save("Export.pdf");
   }, []);
 
@@ -268,7 +225,7 @@ const DynamicAgGrid = forwardRef(({ rowData, searchTerm = "" }, ref) => {
       {/* ✅ Image Popup */}
       {selectedImage && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-2xl shadow-xl max-w-2xl">
+          <div className="bg-white p-2 rounded-2xl shadow-xl max-w-2xl">
             <img
               src={selectedImage}
               alt="Full"
@@ -277,7 +234,7 @@ const DynamicAgGrid = forwardRef(({ rowData, searchTerm = "" }, ref) => {
             <div className="flex justify-center mt-4">
               <button
                 onClick={() => setSelectedImage(null)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                className="px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
               >
                 Close
               </button>

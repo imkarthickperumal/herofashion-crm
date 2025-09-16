@@ -23,103 +23,22 @@ export default function Login({ onLogin }) {
     return true;
   };
 
-  const handleSubmitOld = async (e) => {
-    e.preventDefault();
-    if (!validate()) return; // stop if validation fails
-
-    try {
-      setLoading(true);
-      const data = await loginUser(formData);
-
-      // ✅ Save user and login success
-      localStorage.setItem("user", JSON.stringify(data));
-      toast.success("Login successful!");
-      onLogin(data);
-    } catch (err) {
-      // ✅ Show backend error message OR default
-      let errorMessage = "Invalid credentials";
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      }
-      toast.error(errorMessage); // you can also use toast.warning if you prefer
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmitNoTime = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    const { username, password } = formData;
-
-    // ✅ Dummy login check
-    const dummyUsers = [
-      { username: "karthi", password: "karthi" },
-      { username: "bala", password: "bala" },
-    ];
-    const isDummy = dummyUsers.some(
-      (u) => u.username === username && u.password === password
-    );
-
-    try {
-      setLoading(true);
-
-      if (isDummy) {
-        // ✅ Dummy login success
-        const dummyUser = { username, isDummy: true };
-        localStorage.setItem("user", JSON.stringify(dummyUser));
-        toast.success("Dummy login successful!");
-        onLogin(dummyUser);
-      } else {
-        // ✅ Real API login
-        const data = await loginUser(formData);
-        const apiUser = { ...data, isDummy: false };
-        localStorage.setItem("user", JSON.stringify(apiUser));
-        toast.success("Login successful!");
-        onLogin(apiUser);
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Invalid API credentials");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // ✅ Only API login (dummy login removed)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    const { username, password } = formData;
-
-    // ✅ Dummy login check
-    const dummyUsers = [
-      { username: "karthi", password: "karthi" },
-      { username: "bala", password: "bala" },
-      { username: "dhana", password: "dhana" },
-    ];
-    const isDummy = dummyUsers.some(
-      (u) => u.username === username && u.password === password
-    );
-
     try {
       setLoading(true);
 
-      if (isDummy) {
-        const dummyUser = { username, isDummy: true };
-        localStorage.setItem("user", JSON.stringify(dummyUser));
-        toast.success("Dummy login successful!", { duration: 2000 }); // ⏳ 2 sec
-        onLogin(dummyUser);
-      } else {
-        const data = await loginUser(formData);
-        const apiUser = { ...data, isDummy: false };
-        localStorage.setItem("user", JSON.stringify(apiUser));
-        toast.success("Login successful!", { duration: 2000 }); // ⏳ 2 sec
-        onLogin(apiUser);
-      }
+      const data = await loginUser(formData);
+      const apiUser = { ...data, isDummy: false };
+      localStorage.setItem("user", JSON.stringify(apiUser));
+      toast.success("Login successful!", { duration: 500 }); // ⏳ 2 sec
+      onLogin(apiUser);
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid API credentials", {
-        duration: 2000, // ⏳ 2 sec
+        duration: 500, // ⏳ 2 sec
       });
     } finally {
       setLoading(false);
